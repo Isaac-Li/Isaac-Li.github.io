@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文档是吴恩达老师深度学习课程的学习笔记1. 激活函数    在讨论优化算法时，有一点要说明：我基本已经不用 sigmoid 激活函数了， tanh 函数在  所有场合都优于 sigmoid 函数。  但有一个例外：在二分类的问题中，对于输出层，因为𝑦的值是 0 或 1，所以想让𝑦 ^的数值介于 0 和 1 之间，而不是在-1 和+1 之间。所以需要使用 sigmoid 激活函数。   结果表">
+<meta name="keywords" content="DL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning-学习笔记">
+<meta property="og:url" content="http://Isaac-Li.github.io/2018/09/10/Deep-Learning-学习笔记/index.html">
+<meta property="og:site_name" content="Isaac Li">
+<meta property="og:description" content="本文档是吴恩达老师深度学习课程的学习笔记1. 激活函数    在讨论优化算法时，有一点要说明：我基本已经不用 sigmoid 激活函数了， tanh 函数在  所有场合都优于 sigmoid 函数。  但有一个例外：在二分类的问题中，对于输出层，因为𝑦的值是 0 或 1，所以想让𝑦 ^的数值介于 0 和 1 之间，而不是在-1 和+1 之间。所以需要使用 sigmoid 激活函数。   结果表">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://isaac-li.github.io/2018/09/10/Deep-Learning-学习笔记/images/pasted-53.png">
+<meta property="og:image" content="http://isaac-li.github.io/2018/09/10/Deep-Learning-学习笔记/images/pasted-54.png">
+<meta property="og:updated_time" content="2018-10-18T02:28:18.184Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning-学习笔记">
+<meta name="twitter:description" content="本文档是吴恩达老师深度学习课程的学习笔记1. 激活函数    在讨论优化算法时，有一点要说明：我基本已经不用 sigmoid 激活函数了， tanh 函数在  所有场合都优于 sigmoid 函数。  但有一个例外：在二分类的问题中，对于输出层，因为𝑦的值是 0 或 1，所以想让𝑦 ^的数值介于 0 和 1 之间，而不是在-1 和+1 之间。所以需要使用 sigmoid 激活函数。   结果表">
+<meta name="twitter:image" content="http://isaac-li.github.io/2018/09/10/Deep-Learning-学习笔记/images/pasted-53.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://Isaac-Li.github.io/2018/09/10/Deep-Learning-学习笔记/"/>
+
+
+
+
+
+  <title>Deep Learning-学习笔记 | Isaac Li</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Isaac Li</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">码农 + 测试</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/09/10/Deep-Learning-学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Deep Learning-学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-10T16:15:00+08:00">
+                2018-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="本文档是吴恩达老师深度学习课程的学习笔记"><a href="#本文档是吴恩达老师深度学习课程的学习笔记" class="headerlink" title="本文档是吴恩达老师深度学习课程的学习笔记"></a>本文档是吴恩达老师深度学习课程的学习笔记</h2><p><strong>1. 激活函数 </strong></p>
+<p>  在讨论优化算法时，有一点要说明：我基本已经不用 sigmoid 激活函数了， tanh 函数在<br>  所有场合都优于 sigmoid 函数。<br>  但有一个例外：在二分类的问题中，对于输出层，因为𝑦的值是 0 或 1，所以想让𝑦 ^的数值介于 0 和 1 之间，而不是在-1 和+1 之间。所以需要使用 sigmoid 激活函数。</p>
+<p>  结果表明，如果在隐藏层上使用函数效果总是优于 sigmoid 函数。因为函数值域在-1 和+1的激活函数，其均值是更接近零均值的。在训练一个算法模型时，如果使用 tanh 函数代替sigmoid 函数中心化数据，使得数据的平均值更接近 0 而不是 0.5.<br>这会使下一层学习简单一点。</p>
+<p>  sigmoid 函数和 tanh 函数两者共同的缺点是，在𝑧特别大或者特别小的情况下，导数的<br>梯度或者函数的斜率会变得特别小，最后就会接近于 0，导致降低梯度下降的速度。</p>
+<p>  <strong>这有一些选择激活函数的经验法则：</strong></p>
+<p>  如果输出是 0、 1 值（二分类问题），则输出层选择 sigmoid 函数，然后其它的所有单元都选择 Relu 函数。<br>  这是很多激活函数的默认选择，如果在隐藏层上不确定使用哪个激活函数，那么通常会使用 Relu 激活函数。有时，也会使用 tanh 激活函数，但 Relu 的一个优点是：当𝑧是负值的时候，导数等于 0。</p>
+<p>  总而言之，不能在隐藏层用线性激活函数，可以用 ReLU 或者 tanh 或者 leaky ReLU 或者其他的非线性激活函数，唯一可以用线性激活函数的通常就是输出层；</p>
+<p><strong>2.随机初始化</strong></p>
+<p>对于一个神经网络，如果你把权重或者参数都初始化为 0，那么梯度<br>下降将不会起作用。</p>
+<p>这个问题的解决方法就是随机初始化参数。 你应该这么做 ： 把 𝑊[1] 设 为 np.random.randn(2,2)(生成高斯分布)，通常再乘上一个小的数，比如 0.01，这样把它初始化为很小的随机数。然后𝑏没有这个对称的问题（叫做 symmetry breaking problem），所以可以把 𝑏 初始化为 0。</p>
+<p>为什么是 0.01，而不是 100 或者 1000。我们通常<br>倾向于初始化为很小的随机数。因为如果你用 tanh 或者 sigmoid 激活函数，或者说只在输出层有一个 Sigmoid，如果（数值）波动太大，这种情况<br>下你很可能停在 tanh/sigmoid 函数的平坦的地方，这些地方梯度很小也就意味着梯度下降会很慢，因此学习也就很慢。</p>
+<p><strong>3.反向传播</strong></p>
+<p><img src="/2018/09/10/Deep-Learning-学习笔记/images/pasted-53.png" alt="upload successful"></p>
+<p><strong>4.训练集、验证集、测试集</strong></p>
+<p>在机器学习中，我们通常将样本分成训练集，验证集和测试集三部分，数据集规模相对较小，适用传统的划分比例，数据集规模较大的，验证集和测试集要小于数据总量的 20%或 10%。</p>
+<p>最后一点，就算没有测试集也不要紧，测试集的目的是对最终所选定的神经网络系统做<br>出无偏估计，如果不需要无偏估计，也可以不设置测试集。所以如果只有验证集，没有测试<br>集，我们要做的就是，在训练集上训练，尝试不同的模型框架，在验证集上评估这些模型，<br>然后迭代并选出适用的模型。因为验证集中已经涵盖测试集数据，其不再提供无偏性能评估。</p>
+<p><strong>5.偏差 方差（ Bias /Variance）</strong></p>
+<p>理解偏差和方差的两个关键数据是训练集误差（ Train set error）和验证集误差（ Dev set error）</p>
+<p>假定训练集误差是 1%，为了方便论证，假定验证集误差是 11%，可以看出训练集设置得非常好，而验证集设置相对较差， 我们可能过度拟合了训练集，在某种程度上，验证集并没有充分利用交叉验证集的作用， 像这种情况， 我们称之为“高方差”。</p>
+<p>通过查看训练集误差和验证集误差，我们便可以诊断算法是否具有高方差。也就是说衡量训练集和验证集误差就可以得出不同结论。</p>
+<p>假设训练集误差是 15%，我们把训练集误差写在首行，验证集误差是 16%，假设该案例中人的错误率几乎为 0%，人们浏览这些图片，分辨出是不是猫。算法并没有在训练集中得到很好训练，如果训练数据的拟合度不高，就是数据欠拟合，就可以说这种算法偏差比较高。</p>
+<p>相反，它对于验证集产生的结果却是合理的，验证集中的错误率只比训练集的多了 1%，所以这种算法偏差高，因为它甚至不能拟合训练集，这与上一张幻灯片最左边的图片相似。再举一个例子，训练集误差是 15%，偏差相当高，但是，验证集的评估结果更糟糕，错误率达到 30%，在这种情况下，我会认为这种算法偏差高，因为它在训练集上结果不理想，而且方差也很高，这是方差偏差都很糟糕的情况。再看最后一个例子，训练集误差是 0.5%，验证集误差是 1%，用户看到这样的结果会很开心，猫咪分类器只有 1%的错误率，偏差和方差都很低。</p>
+<p>  这些分析都是基于假设预测的，假设人眼辨别的错误率接近 0%，一般来说，最优误差也被称为贝叶斯误差，所以，最优误差接近 0%，如果最优误差或贝叶斯误差非常高，比如 15%。我们再看看这个分类器（训练误差 15%，验证误差 16%）， 15%的错误率对训练集来说也是非常合理的，偏差不高，方差也非常低。</p>
+<p>  初始模型训练完成后，我首先要知道算法的偏差高不高，如果偏差较高，试着评估训练集或训练数据的性能。如果偏差的确很高，甚至无法拟合训练集，那么你要做的就是选择一个新的网络，比如含有更多隐藏层或者隐藏单元的网络，或者花费更多时间来训练网络，或者尝试更先进的优化算法.</p>
+<p>  如果网络足够大，通常可以很好的拟合训练集，只要你能扩大网络规模，如果图片很模糊，算法可能无法拟合该图片，但如果有人可以分辨出图片，如果你觉得基本误差不是很高，那么训练一个更大的网络， 你就应该可以……至少可以很好地拟合训练集， 至少可以拟合或者过拟合训练集。一旦偏差降低到可以接受的数值，检查一下方差有没有问题，为了评估方差，我们要查看验证集性能，我们能从一个性能理想的训练集推断出验证集的性能是否也理想，如果方差高，最好的解决办法就是采用更多数据，如果你能做到，会有一定的帮助，但有时候，我们无法获得更多数据，我们也可以尝试通过正则化来减少过拟合.</p>
+<p>  有两点需要大家注意：</p>
+<p>第一点，高偏差和高方差是两种不同的情况，我们后续要尝试的方法也可能完全不同，我通常会用训练验证集来诊断算法是否存在偏差或方差问题，然后根据结果选择尝试部分方<br>法。举个例子，如果算法存在高偏差问题，准备更多训练数据其实也没什么用处，至少这不是更有效的方法，所以大家要清楚存在的问题是偏差还是方差，还是两者都有问题，明确这一点有助于我们选择出最有效的方法。</p>
+<p>第二点，在机器学习的初期阶段，关于所谓的偏差方差权衡的讨论屡见不鲜，原因是我们能尝试的方法有很多。可以增加偏差，减少方差，也可以减少偏差，增加方差，但是在深度学习的早期阶段，我们没有太多工具可以做到只减少偏差或方差却不影响到另一方。但在当前的深度学习和大数据时代，只要持续训练一个更大的网络，只要准备了更多数据，那么也并非只有这两种情况，我们假定是这样，那么，只要正则适度，通常构建一个更大的网络便可以，在不影响方差的同时减少偏差，而采用更多数据通常可以在不过多影响偏差的同时减少方差。这两步实际要做的工作是：训练网络，选择网络或者准备更多数据，现在我们有工具可以做到在减少偏差或方差的同时，不对另一方产生过多不良影响。我觉得这就是深度<br>学习对监督式学习大有裨益的一个重要原因，也是我们不用太过关注如何平衡偏差和方差的一个重要原因，但有时我们有很多选择，减少偏差或方差而不增加另一方。最终，我们会得到一个非常规范化的网络。</p>
+<p><strong>6. 正则化（ Regularization） </strong></p>
+<p>深度学习可能存在过拟合问题——高方差， 有两个解决方法， 一个是正则化， 另一个是准备更多的数据，这是非常可靠的方法，但你可能无法时时刻刻准备足够多的训练数据或者获取更多数据的成本很高，但正则化通常有助于避免过拟合或减少你的网络误差。</p>
+<p>如果用的是𝐿1正则化， 𝑤最终会是稀疏的，也就是说𝑤向量中有很多 0，有人说这样有利于压缩模型，因为集合中参数均为 0，存储模型所占用的内存更少。实际上，虽然𝐿1正则化使模型变得稀疏，却没有降低太多存储内存，所以我认为这并不是𝐿1正则化的目的，至少不是为了压缩模型，人们在训练网络时，越来越倾向于使用𝐿2正则化。</p>
+<p>dropout 正则化：Dropout 可以随机删除网络中的神经单元，他为什么可以通过正则化发挥如此大的作用呢？</p>
+<p>直观上理解：不要依赖于任何一个特征，因为该单元的输入可能随时被清除，因此该单元通过这种方式传播下去，并为单元的四个输入增加一点权重，通过传播所有权重， dropout将产生收缩权重的平方范数的效果，和之前讲的𝐿2正则化类似；实施 dropout 的结果实它会压缩权重，并完成一些预防过拟合的外层正则化； 𝐿2对不同权重的衰减是不同的，它取决于激活函数倍增的大小。</p>
+<p>  总结一下， dropout 的功能类似于𝐿2正则化，与𝐿2正则化不同的是应用方式不同会带来一点点小变化，甚至更适用于不同的输入范围。</p>
+<p>  dropout 一大缺点就是代价函数𝐽不再被明确定义，每次迭代，都会随机移除一些节点，<br>如果再三检查梯度下降的性能，实际上是很难进行复查的。定义明确的代价函数𝐽每次迭代<br>后都会下降，因为我们所优化的代价函数 J 实际上并没有明确定义，或者说在某种程度上很<br>难计算，所以我们失去了调试工具来绘制这样的图片。我通常会关闭 dropout 函数，将 keepprob 的值设为 1，运行代码，确保𝐽函数单调递减。然后打开 dropout 函数，希望在 dropout<br>过程中，代码并未引入 bug。</p>
+<p>其他正则化方法： 1. 数据扩增  2.early stopping</p>
+<p>我认为机器学习过程包括几个步骤，其中一步是选择一个算法来优化代价函数𝐽，我们有很多种工具来解决这个问题，如梯度下降，后面我会介绍其它算法，例如 Momentum，RMSprop 和 Adam 等等，但是优化代价函数𝐽之后，我也不想发生过拟合，也有一些工具可以解决该问题，比如正则化，扩增数据等等。</p>
+<p>在机器学习中，超级参数激增，选出可行的算法也变得越来越复杂。我发现，如果我们用一组工具优化代价函数𝐽，机器学习就会变得更简单，在重点优化代价函数𝐽时，你只需要留意𝑤和𝑏， 𝐽(𝑤, 𝑏)的值越小越好，你只需要想办法减小这个值，其它的不用关注。然后，预防过拟合还有其他任务，换句话说就是减少方差，这一步我们用另外一套工具来实现，这个原理有时被称为“正交化”。思路就是在一个时间做一个任务， 后面课上我会具体介绍正交化，如果你还不了解这个概念，不用担心。<br>但对我来说 early stopping 的主要缺点就是你不能独立地处理这两个问题，因为提早停止梯度下降，也就是停止了优化代价函数𝐽，因为现在你不再尝试降低代价函数𝐽，所以代价函数𝐽的值可能不够小，同时你又希望不出现过拟合，你没有采取不同的方式来解决这两个问题，而是用一种方法同时解决两个问题，这样做的结果是我要考虑的东西变得更复杂。</p>
+<p>如果不用 early stopping，另一种方法就是𝐿2正则化，训练神经网络的时间就可能很长。我发现，这导致超级参数搜索空间更容易分解，也更容易搜索，但是缺点在于，你必须尝试很多正则化参数𝜆的值，这也导致搜索大量𝜆值的计算代价太高。<br>Early stopping 的优点是，只运行一次梯度下降，你可以找出𝑤的较小值，中间值和较大值，而无需尝试𝐿2正则化超级参数𝜆的很多值。</p>
+<p><strong>7. 归一化输入</strong> </p>
+<p>训练神经网络，其中一个加速训练的方法就是归一化输入。假设一个训练集有两个特征，输入特征为 2 维，归一化需要两个步骤：</p>
+<pre><code>1.零均值
+2.归一化方差；
+</code></pre><p>我们希望无论是训练集和测试集都是通过相同的𝜇和𝜎2定义的数据转换</p>
+<p><strong>8. 神经网络的权重初始化</strong></p>
+<p>在深度神经网络中，激活函数将以指数级递减，虽然我只是讨论了激活函数以与𝐿相关的指数级数增长或下降，它也适用于与层数𝐿相关的导数或梯度函数，也是呈指数级增长或呈指数递减。</p>
+<p>𝑧 = 𝑤1𝑥1 + 𝑤2𝑥2 + ⋯ + 𝑤𝑛𝑥𝑛， 𝑏 = 0，暂时忽略𝑏，为了预防𝑧值过大或过小，你可以看到𝑛越大，你希望𝑤𝑖越小，因为𝑧是𝑤[𝑖]𝑥[𝑖]的和，如果你把很多此类项相加，希望每项值更小，最合理的方法就是设置𝑤[𝑖] = 1/𝑛， 𝑛表示神经元的输入特征数量，实际上，你要做的就是设置<br>某层权重矩阵𝑤[𝑙] = 𝑛𝑝. 𝑟𝑎𝑛𝑑𝑜𝑚. 𝑟𝑎𝑛𝑑𝑛(shape) ∗ np. sqrt( 1<br>𝑛[𝑙−1] )， 𝑛[𝑙−1]就是我喂给第𝑙层神经单元的数量（即第𝑙 − 1层神经元数量）。</p>
+<p>结果，如果你是用的是 Relu 激活函数，而不是1/𝑛，方差设置为2/𝑛，效果会更好。你常常发现，初始化时，尤其是使用 Relu 激活函数时， 𝑔<a href="𝑧">𝑙</a> = 𝑅𝑒𝑙𝑢(𝑧),它取决于你对随机变量的熟悉程度，这是高斯随机变量，然后乘以它的平方根，也就是引用这个方差2/n。这里，我用的是𝑛[𝑙−1]，因为本例中，逻辑回归的特征是不变的。但一般情况下𝑙层上的每个神经元都有𝑛[𝑙−1]个输入。如果激活函数的输入特征被零均值和标准方差化，方差是 1， 𝑧也会调整到相似范围，这就没解决问题（梯度消失和爆炸问题）。但它确实降低了梯度消失和爆炸问题，因为它给权重矩阵𝑤设置了合理值，你也知道，它不能比 1 大很多，也不能比 1 小很多，所<br>以梯度没有爆炸或消失过快。</p>
+<p><img src="/2018/09/10/Deep-Learning-学习笔记/images/pasted-54.png" alt="upload successful"></p>
+<p><strong>9 局部最优问题</strong></p>
+<p>在深度学习研究早期，人们总是担心优化算法会困在极差的局部最优， 不过随着深度学习理论不断发展，我们对局部最优的理解也发生了改变。我们从深度学习历史中学到的一课就是，我们对低维度空间的大部分直觉，比如你可以画出上面的图，并不能应用到高维度空间中。适用于其它算法，因为如果你有 2 万个参数，那么𝐽函数有 2 万个维度向量，你更可能遇到鞍点，而不是局部最优点。</p>
+<p>如果局部最优不是问题，那么问题是什么？结果是平稳段会减缓学习，平稳段是一块区域，其中导数长时间接近于 0，如果你在此处，梯度会从曲面从从上向下下降，因为梯度等于或接近 0，曲面很平坦，你得花上很长时间慢慢抵达平稳段的这个点。</p>
+<p>所以此次视频的要点是，首先，你不太可能困在极差的局部最优中，条件是你在训练较大的神经网络，存在大量参数， 并且成本函数𝐽被定义在较高的维度空间。<br>第二点，平稳段是一个问题，这样使得学习十分缓慢，这也是像 Momentum 或是<br>RMSprop， Adam 这样的算法，能够加速学习算法的地方。在这些情况下，更成熟的优化算法，如 Adam 算法，能够加快速度，让你尽早往下走出平稳段。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/06/损失函数汇总/" rel="next" title="损失函数汇总">
+                <i class="fa fa-chevron-left"></i> 损失函数汇总
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/14/学习资源/" rel="prev" title="学习资源">
+                学习资源 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Isaac Li" />
+            
+              <p class="site-author-name" itemprop="name">Isaac Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Isaac-Li" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lee_isaac@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本文档是吴恩达老师深度学习课程的学习笔记"><span class="nav-number">1.</span> <span class="nav-text">本文档是吴恩达老师深度学习课程的学习笔记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Isaac Li</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

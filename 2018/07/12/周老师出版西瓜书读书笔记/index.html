@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="周老师的西瓜书简介内容简介 机器学习是计算机科学与人工智能的重要分支领域.本书作为该领域的入 门教材，在内容上尽可能涵盖机器学习基础知识的各方面.全书共16章， 大致分为3个部分：第1部分（第1～3章）介绍机器学习的基础知识；第2  部分（第4～10章）讨论一些经典而常用的机器学习方法（决策树、神经 网络、支持向量机、贝叶斯分类器、集成学习、聚类、降维与度量学 习）；第3部分（第11～16章）为进">
+<meta name="keywords" content="ML">
+<meta property="og:type" content="article">
+<meta property="og:title" content="周老师西瓜书之读书笔记">
+<meta property="og:url" content="http://Isaac-Li.github.io/2018/07/12/周老师出版西瓜书读书笔记/index.html">
+<meta property="og:site_name" content="Isaac Li">
+<meta property="og:description" content="周老师的西瓜书简介内容简介 机器学习是计算机科学与人工智能的重要分支领域.本书作为该领域的入 门教材，在内容上尽可能涵盖机器学习基础知识的各方面.全书共16章， 大致分为3个部分：第1部分（第1～3章）介绍机器学习的基础知识；第2  部分（第4～10章）讨论一些经典而常用的机器学习方法（决策树、神经 网络、支持向量机、贝叶斯分类器、集成学习、聚类、降维与度量学 习）；第3部分（第11～16章）为进">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-13T06:25:39.641Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="周老师西瓜书之读书笔记">
+<meta name="twitter:description" content="周老师的西瓜书简介内容简介 机器学习是计算机科学与人工智能的重要分支领域.本书作为该领域的入 门教材，在内容上尽可能涵盖机器学习基础知识的各方面.全书共16章， 大致分为3个部分：第1部分（第1～3章）介绍机器学习的基础知识；第2  部分（第4～10章）讨论一些经典而常用的机器学习方法（决策树、神经 网络、支持向量机、贝叶斯分类器、集成学习、聚类、降维与度量学 习）；第3部分（第11～16章）为进">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://Isaac-Li.github.io/2018/07/12/周老师出版西瓜书读书笔记/"/>
+
+
+
+
+
+  <title>周老师西瓜书之读书笔记 | Isaac Li</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Isaac Li</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">码农 + 测试</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/12/周老师出版西瓜书读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">周老师西瓜书之读书笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-12T13:13:00+08:00">
+                2018-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="周老师的西瓜书简介"><a href="#周老师的西瓜书简介" class="headerlink" title="周老师的西瓜书简介"></a>周老师的西瓜书简介</h1><p>内容简介</p>
+<pre><code>机器学习是计算机科学与人工智能的重要分支领域.本书作为该领域的入
+门教材，在内容上尽可能涵盖机器学习基础知识的各方面.全书共16章，
+大致分为3个部分：第1部分（第1～3章）介绍机器学习的基础知识；第2 
+部分（第4～10章）讨论一些经典而常用的机器学习方法（决策树、神经
+网络、支持向量机、贝叶斯分类器、集成学习、聚类、降维与度量学
+习）；第3部分（第11～16章）为进阶知识，内容涉及特征选择与稀疏学
+习、计算学习理论、半监督学习、概率图模型、规则学习以及强化学习
+等.每章都附有习题并介绍了相关阅读材料，以便有兴趣的读者进一步钻
+研探索。
+    本书可作为高等院校计算机、自动化及相关专业的本科生或研究生
+ 教材，也可供对机器学习感兴趣的研究人员和工程技术人员阅读参考。
+</code></pre><p>作者简介</p>
+<pre><code>周志华，南京大学计算机系教授，ACM杰出科学家，IEEE Fellow, 
+IAPR Fellow, IET/IEE Fellow, 中国计算机学会会士。国家杰出青年
+科学基金获得者、长江学者特聘教授。先后担任多种SCI(E)期刊执行主
+编、副主编、副编辑、编委等。中国计算机学会人工智能与模式识别专
+业委员会主任，中国人工智能学会机器学习专业委员会主任，IEEE计算
+智能学会数据挖掘技术委员会副主席。
+</code></pre><p>====================================</p>
+<p>以下为个人学习笔记</p>
+<p>第5章：神经网络</p>
+<pre><code>采样层亦称为“汇合”（Pooling）层，其作用是基于局部相关性原理进
+行亚采样，从而在减少数据量的同时保留有用信息----国内很多材料都
+把 Pooling 层翻译成“池化”层，从汉字字面上是完全没法池化跟亚采
+样有什么关系的，个人觉得还是周老师翻译的采样层或汇合层更好理解
+一些。
+</code></pre><p>第6章：支持向量机</p>
+<pre><code>如果原始空间是有限维，即属性数有限，那么一定存在一个高维特征空
+间使样本可分。
+我们希望样本在特征空间内线性可分，因此特征空间的好坏对支持向量
+机的性能至关重要，需要注意的是，在不知道特征映射的形式时，我们
+并不知道什么样的核函数是合适的，而核函数也仅是隐式地定义了这个
+特征空间。于是，“核函数选择”成为支持向量机的最大变数，若核函数
+选择不合适，则意味着将样本映射到了一个不合适的特征空间，很可能
+导致性能不佳。
+</code></pre><p>第7章： 贝叶斯分类 </p>
+<pre><code>欲使用贝叶斯判定准则来最小化决策风险，首先要获得后验概率
+P（c|x），然而，在现实任务中这通常难以直接获得，从这个角度来
+看，机器学习所要实现的是基于有限的训练样本集尽可能准确地估计出
+后验概率 P（c|x）。大体来说，主要有两种策略：给定x，可通过直接
+建模 P（c|x）来预测c，这样得到是“判别式模型”；也可以先对联合概
+率分布P（x，c）建模，然后再由此获得P（c|x）这样得到的是“生成式
+模型”。显然，前面介绍的决策树、BP神经网络、支持向量机等，都可归
+入判别式模型的范畴。
+
+因此估计P（c|x）的问题就转化为如何基于训练数据D来估计先验P（c）
+和似然P（x|c）。
+
+类先验概率P（c）表达了样本空间中各类样本所占的比例，根据大数定
+律，当训练集包含充足的独立同分布样本时，P（c）可通过各类样本出
+现的频率来进行估计。
+
+对类条件概率P（x|c）来说，由于它涉及关于x所有属性的联合概率，直
+接根据样本出现的频率来估计将会遇到严重的困难。在现实应用中，这
+个值往往远大于训练样本数m，也就是说，很多样本取值在训练集中根本
+没有出现，直接使用频率来估计P（x|c）显然不可行，因为“未被观测
+到”与“出现概率为零”通常是不同的。
+
+为了避免其他属性携带的信息被训练集中未出现的属性值“抹去”，
+在估计概率值时通常要进行“平滑（smoothing）”，常用“拉普拉斯
+修正”。显然，拉普拉斯修正避免了因训练集样本不充分而导致概率估
+值为零的问题，并且在训练集变大时，修正过程所引入的先验的影响
+也会逐渐变得可忽略，使得估值逐渐趋向于实际概率值
+
+拉普拉斯修正实质上假设了属性值与类别均匀分布，这是在朴素贝叶
+斯学习过程中额外引入的关于数据的先验。
+
+为了降低贝叶斯公式中估计后验概率P（c|x）的困难，朴素贝叶斯分
+类器采用了属性条件独立性假设，但在现实任务中这个假设往往很难
+成立，于是，人们尝试了对属性条件独立性假设进行一定程度的放松，
+由此产生了一类称为“半朴素贝叶斯分类器”的学习方法。半朴素贝叶
+斯分类器的基本想法是适当考虑一部分属性间的相互依赖信息，从而
+既不需要进行完全联合概率计算，又不至于彻底忽略了比较强的属性
+依赖关系。
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"># ML</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/09/nginx-启动问题/" rel="next" title="nginx 启动问题">
+                <i class="fa fa-chevron-left"></i> nginx 启动问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/12/Hadoop-3-x-版本导入Eclipse后的错误处理/" rel="prev" title="Hadoop 3.x 版本导入Eclipse后的错误处理">
+                Hadoop 3.x 版本导入Eclipse后的错误处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Isaac Li" />
+            
+              <p class="site-author-name" itemprop="name">Isaac Li</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Isaac-Li" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lee_isaac@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#周老师的西瓜书简介"><span class="nav-number">1.</span> <span class="nav-text">周老师的西瓜书简介</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Isaac Li</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
