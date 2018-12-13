@@ -259,6 +259,1006 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/" itemprop="url">RCNN, Fast RCNN, Faster RCNN</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T10:29:00+08:00">
+                2018-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>概览R-CNN</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-1.png" alt="upload successful"></p>
+<p>一. RCNN</p>
+<p>算法概要：首先输入一张图片，我们先定位出2000个物体候选框，然后采用CNN提取每个候选框中图片的特征向量，特征向量的维度为4096维，接着采用svm算法对各个候选框中的物体进行分类识别。也就是总个过程分为三个程序：a、找出候选框；b、利用CNN提取特征向量；c、利用SVM进行特征向量分类。具体的流程如下图片所示：</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-0.png" alt="upload successful"></p>
+<p>在CNN阶段，如果用selective search挑选出来的候选框与物体的人工标注矩形框的重叠区域IoU大于0.5，那么我们就把这个候选框标注成物体类别，否则我们就把它当做背景类别。</p>
+<p>二. Fast RCNN</p>
+<p>引入原因：FRCNN针对RCNN在训练时是multi-stage pipeline和训练的过程中很耗费时间空间的问题进行改进。它主要是将深度网络和后面的SVM分类两个阶段整合到一起，使用一个新的网络直接做分类和回归。</p>
+<p>改进：最后一个卷积层后加了一个ROI pooling layer。ROI pooling layer首先可以将image中的ROI定位到feature map，然后是用一个单层的SPP layer将这个feature map patch池化为固定大小的feature之后再传入全连接层。</p>
+<p>损失函数使用了多任务损失函数(multi-task loss)，将边框回归直接加入到CNN网络中训练。</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-2.png" alt="upload successful"><br>图中省略了通过ss获得proposal的过程，第一张图中红框里的内容即为通过ss提取到的proposal，中间的一块是经过深度卷积之后得到的conv feature map，图中灰色的部分就是我们红框中的proposal对应于conv feature map中的位置，之后对这个特征经过ROI pooling layer处理，之后进行全连接。在这里得到的ROI feature vector最终被分享，一个进行全连接之后用来做softmax回归，用来进行分类，另一个经过全连接之后用来做bbox回归。</p>
+<p>注意： 对中间的Conv feature map进行特征提取。每一个区域经过RoI pooling layer和FC layers得到一个 固定长度 的feature vector(这里需要注意的是，输入到后面RoI pooling layer的feature map是在Conv feature map上提取的，故整个特征提取过程，只计算了一次卷积。虽然在最开始也提取出了大量的RoI，但他们还是作为整体输入进卷积网络的，最开始提取出的RoI区域只是为了最后的Bounding box 回归时使用，用来输出原图中的位置)。</p>
+<p>SPP网络</p>
+<p>何恺明研究员于14年撰写的论文，主要是把经典的Spatial Pyramid Pooling结构引入CNN中，从而使CNN可以处理任意size和scale的图片；这中方法不仅提升了分类的准确率，而且还非常适合Detection，比经典的RNN快速准确。</p>
+<p>SPP layer</p>
+<p>根据pooling规则，每个pooling bin（window）对应一个输出，所以最终pooling后特征输出由bin的个数来决定。本文就是分级固定bin的个数，调整bin的尺寸来实现多级pooling固定输出。</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-3.png" alt="upload successful"></p>
+<p>通过融合各级bin的输出，最终每一个unpooled FM经过SPP处理后，得到了1+4+16维的SPPed FM输出特征，经过融合后输入分类器。</p>
+<p>这样就可以在任意输入size和scale下获得固定的输出；不同scale下网络可以提取不同尺度的特征，有利于分类。</p>
+<p>RoI pooling layer</p>
+<p>每一个RoI都有一个四元组（r,c,h,w）表示，其中（r，c）表示左上角，而（h，w）则代表高度和宽度。这一层使用最大池化（max pooling）来将RoI区域转化成固定大小的HW的特征图。假设一个RoI的窗口大小为hw,则转换成HW之后，每一个网格都是一个h/H * w/W大小的子网，利用最大池化将这个子网中的值映射到HW窗口即可。Pooling对每一个特征图通道都是独立的，这是SPP layer的特例，即只有一层的空间金字塔。</p>
+<p>从预训练的网络中初始化数据</p>
+<p>有三种预训练的网络：CaffeNet，VGG_CNN_M_1024，VGG-16，他们都有5个最大池化层和5到13个不等的卷积层。用他们来初始化Fast R-CNN时，需要修改三处：</p>
+<p>①最后一个池化层被RoI pooling layer取代</p>
+<p>②最后一个全连接层和softmax被替换成之前介绍过的两个兄弟并列层</p>
+<p>③网络输入两组数据：一组图片和那些图片的一组RoIs</p>
+<p>算法特点</p>
+<p>1 通过Spatial Pyramid Pooling解决了深度网络固定输入层尺寸的这个限制，使得网络可以享受不限制输入尺寸带来的好处。</p>
+<p>2 解决了RCNN速度慢的问题，不需要对每个Proposal（2000个左右）进行Wrap或Crop输入CNN提取Feature Map，只需要对整图提一次Feature Map，然后将Proposal区域映射到卷积特征层得到全链接层的输入特征。</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-6.png" alt="upload successful"></p>
+<p>三. Faster RCNN</p>
+<p>在Fast R-CNN还存在着瓶颈问题：Selective Search（选择性搜索）。要找出所有的候选框，这个也非常耗时。那我们有没有一个更加高效的方法来求出这些候选框呢？<br>在Faster R-CNN中加入一个提取边缘的神经网络，也就说找候选框的工作也交给神经网络来做了。这样，目标检测的四个基本步骤（候选区域生成，特征提取，分类，位置精修）终于被统一到一个深度网络框架之内。如下图所示：</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-9.png" alt="upload successful"></p>
+<p>Faster R-CNN统一的网络结构如下图所示，可以简单看作RPN （Region Proposal Network）网络+Fast R-CNN网络。</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-4.png" alt="upload successful"><br>原理步骤如下:</p>
+<p>首先向CNN网络【ZF或VGG-16】输入任意大小图片；</p>
+<p>经过CNN网络前向传播至最后共享的卷积层，一方面得到供RPN网络输入的特征图，另一方面继续前向传播至特有卷积层，产生更高维特征图；</p>
+<p>供RPN网络输入的特征图经过RPN网络得到区域建议和区域得分，并对区域得分采用非极大值抑制【阈值为0.7】，输出其Top-N【文中为300】得分的区域建议给RoI池化层；</p>
+<p>第2步得到的高维特征图和第3步输出的区域建议同时输入RoI池化层，提取对应区域建议的特征；</p>
+<p>第4步得到的区域建议特征通过全连接层后，输出该区域的分类得分以及回归后的bounding-box。</p>
+<p>Region Proposal Network（RPN）的核心思想是使用卷积神经网络直接产生Region Proposal，使用的方法本质上就是滑动窗口。RPN的设计比较巧妙，RPN只需在最后的卷积层上滑动一遍，借助Anchor机制和边框回归可以得到多尺度多长宽比的Region Proposal。</p>
+<p>单个RPN网络结构如下:</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-5.png" alt="upload successful"></p>
+<p>在ZF网络模型下，给定输入图像（假设分辨率为600x1000），经过卷积操作得到最后一层的卷积特征图（大小约为40x60）。在这个特征图上使用3x3的卷积核（滑动窗口）与特征图进行卷积，最后一层卷积层共有256个Feature Map，那么这个3x3的区域卷积后可以获得一个256维的特征向量，后边接Cls Layer和Reg Layer分别用于分类和边框回归（跟Fast RCNN类似，只不过这里的类别只有目标和背景两个类别）。3x3滑窗对应的每个特征区域同时预测输入图像3种尺度（128,256,512），3种长宽比（1:1,1:2,2:1）的Region Proposal，这种映射的机制称为Anchor。所以对于这个40x60的Feature Map，总共有约20000（40x60x9）个Anchor，也就是预测20000个Region Proposal。下图是51x39个Anchor中心，以及9种Anchor示例。</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-8.png" alt="upload successful"></p>
+<p>这样设计的好处是什么？虽然现在也是用的滑动窗口策略，但是，滑动窗口操作是在卷积层特征图上进行的，维度较原始图像降低了16x16倍（16如何得到的可参见前文）；多尺度采用了9种Anchor，对应了三种尺度和三种长宽比，加上后边接了边框回归，所以即便是这9种Anchor外的窗口也能得到一个跟目标比较接近的Region Proposal</p>
+<p>RPN层的具体流程</p>
+<p>首先套用ImageNet上常用的图像分类网络，本文中试验了两种网络：ZF或VGG-16，利用这两种网络的部分卷积层产生原始图像的特征图；</p>
+<p>对于1中特征图，用n×n【论文中设计为3×3，n=3看起来很小，但是要考虑到这是非常高层的feature map，其size本身也没有多大，因此9个矩形中，每个矩形窗框都是可以感知到很大范围的】的滑动窗口在特征图上滑动扫描【代替了从原始图滑窗获取特征】，每个滑窗位置通过卷积层1映射到一个低维的特征向量【ZF网络：256维；VGG-16网络：512维，低维是相对于特征图大小W×H，typically~60×40=2400】后采用ReLU，并为每个滑窗位置考虑k种【论文中k=9】可能的参考窗口【论文中称为anchors，见下解释】，这就意味着每个滑窗位置会同时预测最多9个区域建议【超出边界的不考虑】，对于一个W×H的特征图，就会产生W×H×k个区域建议；</p>
+<p>步骤2中的低维特征向量输入两个并行连接的卷积层2：reg窗口回归层【位置精修】和cls窗口分类层，分别用于回归区域建议产生bounding-box【超出图像边界的裁剪到图像边缘位置】和对区域建议是否为前景或背景打分，这里由于每个滑窗位置产生k个区域建议，所以reg层有4k个输出来编码【平移缩放参数】k个区域建议的坐标，cls层有2k个得分估计k个区域建议为前景或者背景的概率。</p>
+<p>算法特点</p>
+<p>1 提出了Region Proposal Network（RPN），将Proposal阶段和CNN分类融到了一起，实现了一个完全的End-To-End的CNN目标检测模型。RPN可以快速提取高质量的Proposal，不仅加快了目标检测速度，还提高了目标检测性能。</p>
+<p>2 将Fast-RCNN和RPN放在同一个网络结构中训练，共享网络参数。</p>
+<p><img src="/2018/07/26/RCNN-Fast-RCNN-Faster-RCNN/images/pasted-7.png" alt="upload successful"></p>
+<p>参考博客-感谢各位博主的分享：<br><a href="http://shartoo.github.io/RCNN-series/" target="_blank" rel="noopener">http://shartoo.github.io/RCNN-series/</a><br><a href="http://lanbing510.info/2017/08/24/RCNN-FastRCNN-FasterRCNN.html" target="_blank" rel="noopener">http://lanbing510.info/2017/08/24/RCNN-FastRCNN-FasterRCNN.html</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/25/Ubuntu环境下SSH的安装及使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/25/Ubuntu环境下SSH的安装及使用/" itemprop="url">Ubuntu环境下SSH的安装及使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T16:14:00+08:00">
+                2018-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>SSH分客户端openssh-client和openssh-server</p>
+<p>Ubuntu默认是安装 SSH 客户端的，但是没有安装 server 端</p>
+<ol>
+<li><p>安装server端</p>
+<pre><code>sudo apt-get install openssh-server
+</code></pre></li>
+<li><p>然后确认sshserver是否启动        </p>
+<pre><code>ps -e|grep ssh
+</code></pre></li>
+</ol>
+<p>SSH常用的服务命令</p>
+<p>停止服务：sudo /etc/init.d/ssh stop</p>
+<p>启动服务：sudo /etc/init.d/ssh start</p>
+<p>重启服务：sudo /etc/init.d/sshresart</p>
+<p>断开连接：exit</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/18/《深入理解Java虚拟机》之读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/18/《深入理解Java虚拟机》之读书笔记/" itemprop="url">《深入理解Java虚拟机》之读书笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-18T10:18:00+08:00">
+                2018-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>第2章 Java内存区域与内存溢出异常</p>
+<p>程序计数器： 程序计数器是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是改变这个计数器的值来选取下一条需要执行的字节码指令，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<p>由于Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个确定时刻，一个处理器都只会执行一条线程中的指令。因此，为了线程切换后能恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，各条线程之间计数器互不影响，独立存储，我们称这类内存区域为“线程私有”的内存。</p>
+<p>Java虚拟机栈：与程序计数器一样，Java虚拟机栈也是线程私有的，它的生命周期与线程相同。</p>
+<p>本地方法栈：本地方法栈与虚拟机栈所发挥的作用是非常相似的，它们之间的区别不过是虚拟机栈为虚拟机执行Java方法服务，而本地方法栈则为虚拟机使用到的Native方法服务。</p>
+<p>Java堆：Java堆是垃圾收集器管理的主要区域。</p>
+<p>方法区：方法区域Java堆一样，是各个线程共享的内存区域，它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/12/Hadoop-3-x-版本导入Eclipse后的错误处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/12/Hadoop-3-x-版本导入Eclipse后的错误处理/" itemprop="url">Hadoop 3.x 版本导入Eclipse后的错误处理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-12T17:14:00+08:00">
+                2018-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Big-Data/" itemprop="url" rel="index">
+                    <span itemprop="name">Big Data</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Eclipse里导入 hadoop源码时会遇到很多编译错误，下面是我遇到的一些问题及解决办法</p>
+<hr>
+<p>错误一：hadoop-streaming 项目buildpath里的项目引用丢失</p>
+<p>解决办法：删除 missing 的项目，重新添加</p>
+<hr>
+<p>错误二：缺少 AvroRecord 文件</p>
+<p>解决办法：下载 AvroRecord.java 文件，copy到需要引用这个文件的目录</p>
+<hr>
+<p>错误三：找不到 Sun.net.spi.nameservice.NameService</p>
+<p>解决办法：sun.net.spi.nameservice.NameService错误，这是一个需要import的包，存在于openjdk中，在OracleJdk中没找到，需要下载一个。NameService是一个接口，在网上找一个NameService放到该包中就好。<br><a href="http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/7u40-b43/sun/net/spi/nameservice/NameService.java#NameService" target="_blank" rel="noopener">http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/7u40-b43/sun/net/spi/nameservice/NameService.java#NameService</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/12/周老师出版西瓜书读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/12/周老师出版西瓜书读书笔记/" itemprop="url">周老师西瓜书之读书笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-12T13:13:00+08:00">
+                2018-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="周老师的西瓜书简介"><a href="#周老师的西瓜书简介" class="headerlink" title="周老师的西瓜书简介"></a>周老师的西瓜书简介</h1><p>内容简介</p>
+<pre><code>机器学习是计算机科学与人工智能的重要分支领域.本书作为该领域的入
+门教材，在内容上尽可能涵盖机器学习基础知识的各方面.全书共16章，
+大致分为3个部分：第1部分（第1～3章）介绍机器学习的基础知识；第2 
+部分（第4～10章）讨论一些经典而常用的机器学习方法（决策树、神经
+网络、支持向量机、贝叶斯分类器、集成学习、聚类、降维与度量学
+习）；第3部分（第11～16章）为进阶知识，内容涉及特征选择与稀疏学
+习、计算学习理论、半监督学习、概率图模型、规则学习以及强化学习
+等.每章都附有习题并介绍了相关阅读材料，以便有兴趣的读者进一步钻
+研探索。
+    本书可作为高等院校计算机、自动化及相关专业的本科生或研究生
+ 教材，也可供对机器学习感兴趣的研究人员和工程技术人员阅读参考。
+</code></pre><p>作者简介</p>
+<pre><code>周志华，南京大学计算机系教授，ACM杰出科学家，IEEE Fellow, 
+IAPR Fellow, IET/IEE Fellow, 中国计算机学会会士。国家杰出青年
+科学基金获得者、长江学者特聘教授。先后担任多种SCI(E)期刊执行主
+编、副主编、副编辑、编委等。中国计算机学会人工智能与模式识别专
+业委员会主任，中国人工智能学会机器学习专业委员会主任，IEEE计算
+智能学会数据挖掘技术委员会副主席。
+</code></pre><p>====================================</p>
+<p>以下为个人学习笔记</p>
+<p>第5章：神经网络</p>
+<pre><code>采样层亦称为“汇合”（Pooling）层，其作用是基于局部相关性原理进
+行亚采样，从而在减少数据量的同时保留有用信息----国内很多材料都
+把 Pooling 层翻译成“池化”层，从汉字字面上是完全没法池化跟亚采
+样有什么关系的，个人觉得还是周老师翻译的采样层或汇合层更好理解
+一些。
+</code></pre><p>第6章：支持向量机</p>
+<pre><code>如果原始空间是有限维，即属性数有限，那么一定存在一个高维特征空
+间使样本可分。
+我们希望样本在特征空间内线性可分，因此特征空间的好坏对支持向量
+机的性能至关重要，需要注意的是，在不知道特征映射的形式时，我们
+并不知道什么样的核函数是合适的，而核函数也仅是隐式地定义了这个
+特征空间。于是，“核函数选择”成为支持向量机的最大变数，若核函数
+选择不合适，则意味着将样本映射到了一个不合适的特征空间，很可能
+导致性能不佳。
+</code></pre><p>第7章： 贝叶斯分类 </p>
+<pre><code>欲使用贝叶斯判定准则来最小化决策风险，首先要获得后验概率
+P（c|x），然而，在现实任务中这通常难以直接获得，从这个角度来
+看，机器学习所要实现的是基于有限的训练样本集尽可能准确地估计出
+后验概率 P（c|x）。大体来说，主要有两种策略：给定x，可通过直接
+建模 P（c|x）来预测c，这样得到是“判别式模型”；也可以先对联合概
+率分布P（x，c）建模，然后再由此获得P（c|x）这样得到的是“生成式
+模型”。显然，前面介绍的决策树、BP神经网络、支持向量机等，都可归
+入判别式模型的范畴。
+
+因此估计P（c|x）的问题就转化为如何基于训练数据D来估计先验P（c）
+和似然P（x|c）。
+
+类先验概率P（c）表达了样本空间中各类样本所占的比例，根据大数定
+律，当训练集包含充足的独立同分布样本时，P（c）可通过各类样本出
+现的频率来进行估计。
+
+对类条件概率P（x|c）来说，由于它涉及关于x所有属性的联合概率，直
+接根据样本出现的频率来估计将会遇到严重的困难。在现实应用中，这
+个值往往远大于训练样本数m，也就是说，很多样本取值在训练集中根本
+没有出现，直接使用频率来估计P（x|c）显然不可行，因为“未被观测
+到”与“出现概率为零”通常是不同的。
+
+为了避免其他属性携带的信息被训练集中未出现的属性值“抹去”，
+在估计概率值时通常要进行“平滑（smoothing）”，常用“拉普拉斯
+修正”。显然，拉普拉斯修正避免了因训练集样本不充分而导致概率估
+值为零的问题，并且在训练集变大时，修正过程所引入的先验的影响
+也会逐渐变得可忽略，使得估值逐渐趋向于实际概率值
+
+拉普拉斯修正实质上假设了属性值与类别均匀分布，这是在朴素贝叶
+斯学习过程中额外引入的关于数据的先验。
+
+为了降低贝叶斯公式中估计后验概率P（c|x）的困难，朴素贝叶斯分
+类器采用了属性条件独立性假设，但在现实任务中这个假设往往很难
+成立，于是，人们尝试了对属性条件独立性假设进行一定程度的放松，
+由此产生了一类称为“半朴素贝叶斯分类器”的学习方法。半朴素贝叶
+斯分类器的基本想法是适当考虑一部分属性间的相互依赖信息，从而
+既不需要进行完全联合概率计算，又不至于彻底忽略了比较强的属性
+依赖关系。
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/09/nginx-启动问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/09/nginx-启动问题/" itemprop="url">nginx 启动问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T13:43:00+08:00">
+                2018-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一、现象描述</p>
+<p>运行 nginx -t 启动 nginx 服务，启动后打开浏览器查看首页，找不到页面</p>
+<p>二、问题定位</p>
+<p>进入 nginx 的 logs 目录</p>
+<pre><code>cd  /usr/local/nginx/logs
+</code></pre><p>查看目录文件 </p>
+<pre><code>ls -l
+</code></pre><p>发现只有 error.log 文件不为空，查看文件内容显示如下</p>
+<pre><code>invalid PID number &quot;&quot; in &quot;/usr/local/nginx/nginx.pid&quot;
+</code></pre><p>三、解决方法</p>
+<p>执行</p>
+<pre><code>nginx -c /etc/nginx/nginx.conf
+</code></pre><p>重启 nginx 服务</p>
+<pre><code>nginx -s reload
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/07/09/nginx-安装配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -968,7 +1968,7 @@ tcp        0      0 0.0.0.0:5901            0.0.0.0:*               LISTEN
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">40</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -990,7 +1990,7 @@ tcp        0      0 0.0.0.0:5901            0.0.0.0:*               LISTEN
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

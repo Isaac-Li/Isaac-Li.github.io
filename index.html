@@ -259,6 +259,1011 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/12/12/Java-类加载器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/12/Java-类加载器/" itemprop="url">Java 类加载器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-12T15:32:00+08:00">
+                2018-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、类加载机制"><a href="#一、类加载机制" class="headerlink" title="一、类加载机制"></a>一、类加载机制</h3><p>当程序主动使用某个类时，如果该类还未被加载到内存中，则系统会通过加载、连接、初始化三个步骤来对该类进行初始化</p>
+<p><img src="/2018/12/12/Java-类加载器/images/pasted-83.png" alt="upload successful"></p>
+<p><strong>a. 加载</strong></p>
+<p>加载是类加载过程中的一个阶段，这个阶段会在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的入口。注意这里不一定非得要从一个Class文件获取，这里既可以从ZIP包中读取（比如从jar包和war包中读取），也可以在运行时计算生成（动态代理），也可以由其它文件生成（比如将JSP文件转换成对应的Class类）。</p>
+<p><strong>b. 验证</strong></p>
+<p>这一阶段的主要目的是为了确保Class文件的字节流中包含的信息是否符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。主要包括四种验证，</p>
+<ul>
+<li>文件格式验证：验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理，该验证的主要目的是保证输入的字节流能正确地解析并存储于方法区之内。经过该阶段的验证后，字节流才会进入内存的方法区中进行存储，后面的三个验证都是基于方法区的存储结构进行的。</li>
+<li>元数据验证：对类的元数据信息进行语义校验（其实就是对类中的各数据类型进行语法校验），保证不存在不符合Java语法规范的元数据信息。</li>
+<li>字节码验证：该阶段验证的主要工作是进行数据流和控制流分析，对类的方法体进行校验分析，以保证被校验的类的方法在运行时不会做出危害虚拟机安全的行为。</li>
+<li>符号引用验证：这是最后一个阶段的验证，它发生在虚拟机将符号引用转化为直接引用的时候（解析阶段中发生该转化，后面会有讲解），主要是对类自身以外的信息（常量池中的各种符号引用）进行匹配性的校验。</li>
+</ul>
+<p><strong>c. 准备</strong></p>
+<p>准备阶段是正式为类变量分配内存并设置类变量的初始值阶段，即在方法区中分配这些变量所使用的内存空间。注意这里所说的初始值概念，比如一个类变量定义为：</p>
+<p>public static int v = 8080;<br>实际上变量v在准备阶段过后的初始值为0而不是8080，将v赋值为8080的putstatic指令是程序被编译后，存放于类构造器<client>方法之中，这里我们后面会解释。<br>但是注意如果声明为：</client></p>
+<p>public static final int v = 8080;<br>在编译阶段会为v生成ConstantValue属性，在准备阶段虚拟机会根据ConstantValue属性将v赋值为8080。</p>
+<p><strong>d. 解析</strong></p>
+<p>解析阶段是指虚拟机将常量池中的符号引用替换为直接引用的过程。符号引用就是class文件中的：</p>
+<p>CONSTANT_Class_info<br>CONSTANT_Field_info<br>CONSTANT_Method_info<br>等类型的常量。</p>
+<p>下面我们解释一下符号引用和直接引用的概念：</p>
+<p>符号引用与虚拟机实现的布局无关，引用的目标并不一定要已经加载到内存中。各种虚拟机实现的内存布局可以各不相同，但是它们能接受的符号引用必须是一致的，因为符号引用的字面量形式明确定义在Java虚拟机规范的Class文件格式中。<br>直接引用可以是指向目标的指针，相对偏移量或是一个能间接定位到目标的句柄。如果有了直接引用，那引用的目标必定已经在内存中存在。</p>
+<p><strong>e. 初始化</strong></p>
+<p>初始化阶段是类加载最后一个阶段，前面的类加载阶段之后，除了在加载阶段可以自定义类加载器以外，其它操作都由JVM主导。到了初始阶段，才开始真正执行类中定义的Java程序代码。</p>
+<p>初始化阶段是执行类构造器<client>方法的过程。<client>方法是由编译器自动收集类中的类变量的赋值操作和静态语句块中的语句合并而成的。虚拟机会保证<client>方法执行之前，父类的<client>方法已经执行完毕。p.s: 如果一个类中没有对静态变量赋值也没有静态语句块，那么编译器可以不为这个类生成<client>()方法。</client></client></client></client></client></p>
+<h3 id="类初始化的时机"><a href="#类初始化的时机" class="headerlink" title="类初始化的时机"></a>类初始化的时机</h3><p>当Java程序首次通过下面的 6种 方式来使用某个类或接口时，系统就会初始化该类或接口，也称为主动初始化。<br>触发类加载的条件：</p>
+<ol>
+<li>创建类的实例。<ul>
+<li>使用 new 来创建实例</li>
+<li>通过反射创建实例</li>
+<li>通过反序列化来创建实例</li>
+</ul>
+</li>
+<li>调用类的类变量（静态属性），或为该类变量赋值。</li>
+<li>调用类的静态方法。</li>
+<li>通过class文件反射创建对象。<br>例如：Class.forName(“Person”);</li>
+<li>初始化一个子类的时候，该子类的所有父类都会被初始化。</li>
+<li>java虚拟机启动时被标记为启动类的类，就是 main 方法所在的类。</li>
+</ol>
+<p><em>注意以下几种情况不会执行类初始化：</em></p>
+<ul>
+<li>通过子类引用父类的静态字段，只会触发父类的初始化，而不会触发子类的初始化。</li>
+<li>定义对象数组，不会触发该类的初始化。</li>
+<li>常量在编译期间会存入调用类的常量池中，本质上并没有直接引用定义常量的类，不会触发定义常量所在的类。</li>
+<li>通过类名获取Class对象，不会触发类的初始化。</li>
+<li>通过Class.forName加载指定类时，如果指定参数initialize为false时，也不会触发类初始化，其实这个参数是告诉虚拟机，是否要对类进行初始化。</li>
+<li>通过ClassLoader默认的loadClass方法，也不会触发初始化动作。</li>
+<li>在编译时能够确定下来的 final修饰的静态变量（编译常量）不会对类进行初始化。</li>
+<li>在编译时无法确定下来的 final修饰的静态变量（运行时常量）会对类进行初始化。</li>
+</ul>
+<h3 id="二-类加载器"><a href="#二-类加载器" class="headerlink" title="二. 类加载器"></a>二. 类加载器</h3><p>类加载器（class loader）用来加载 Java 类到 Java 虚拟机中。一般来说，Java 虚拟机使用 Java 类的方式如下：Java 源程序（.java 文件）在经过 Java 编译器编译之后就被转换成 Java 字节代码（.class 文件）。类加载器负责读取 Java 字节代码，并转换成 java.lang.Class类的一个实例。每个这样的实例用来表示一个 Java 类。通过此实例的 newInstance()方法就可以创建出该类的一个对象。</p>
+<p>基本上所有的类加载器都是 java.lang.ClassLoader类的一个实例。</p>
+<p><strong>java.lang.ClassLoader类介绍</strong></p>
+<p>java.lang.ClassLoader类的基本职责就是根据一个指定的类的名称，找到或者生成其对应的字节代码，然后从这些字节代码中定义出一个 Java 类，即 java.lang.Class类的一个实例。除此之外，ClassLoader还负责加载 Java 应用所需的资源，如图像文件和配置文件等。</p>
+<p><strong>类加载器的树状组织结构</strong></p>
+<p>Java 中的类加载器大致可以分成两类，一类是系统提供的，另外一类则是由 Java 应用开发人员编写的。系统提供的类加载器主要有下面三个：</p>
+<ul>
+<li>引导类加载器（bootstrap class loader）：它用来加载 Java 的核心库，是用原生代码来实现的，并不继承自 java.lang.ClassLoader。</li>
+<li>扩展类加载器（extensions class loader）：它用来加载 Java 的扩展库。Java 虚拟机的实现会提供一个扩展库目录（JAVA_HOME/jre/ext/*.jar或java.ext.dirs路径下的内容）。该类加载器在此目录里面查找并加载 Java 类。由sun.misc.Launcher$ExtClassLoader实现</li>
+<li>系统类加载器（system class loader）：它根据 Java 应用的类路径（CLASSPATH）来加载 Java 类。一般来说，Java 应用的类都是由它来完成加载的。可以通过 ClassLoader.getSystemClassLoader()来获取它。由sun.misc.Launcher$AppClassLoader实现</li>
+</ul>
+<p>除了系统提供的类加载器以外，开发人员可以通过继承 java.lang.ClassLoader类的方式实现自己的类加载器，以满足一些特殊的需求。</p>
+<p>除了引导类加载器之外，所有的类加载器都有一个父类加载器。通过 表 1中给出的 getParent()方法可以得到。对于系统提供的类加载器来说，系统类加载器的父类加载器是扩展类加载器，而扩展类加载器的父类加载器是引导类加载器；对于开发人员编写的类加载器来说，其父类加载器是加载此类加载器 Java 类的类加载器。因为类加载器 Java 类如同其它的 Java 类一样，也是要由类加载器来加载的。一般来说，开发人员编写的类加载器的父类加载器是系统类加载器。类加载器通过这种方式组织起来，形成树状结构。树的根节点就是引导类加载器。图 1中给出了一个典型的类加载器树状组织结构示意图，其中的箭头指向的是父类加载器。</p>
+<p>图 1. 类加载器树状组织结构示意图</p>
+<p><img src="/2018/12/12/Java-类加载器/images/pasted-84.png" alt="upload successful"></p>
+<p>代码清单 1演示了类加载器的树状组织结构。</p>
+<p>清单 1. 演示类加载器的树状组织结构</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderTree</span> </span>&#123; </span><br><span class="line"></span><br><span class="line"> 	 <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123; </span><br><span class="line">     	 ClassLoader loader = ClassLoaderTree.class.getClassLoader(); </span><br><span class="line">        <span class="keyword">while</span> (loader != <span class="keyword">null</span>) &#123; </span><br><span class="line">            System.out.println(loader.toString()); </span><br><span class="line">            loader = loader.getParent(); </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="类加载器的代理模式"><a href="#类加载器的代理模式" class="headerlink" title="类加载器的代理模式"></a>类加载器的代理模式</h3><p>类加载器在尝试自己去查找某个类的字节代码并定义它时，会先代理给其父类加载器，由父类加载器先去尝试加载这个类，依次类推。在介绍代理模式背后的动机之前，首先需要说明一下 Java 虚拟机是如何判定两个 Java 类是相同的。Java 虚拟机不仅要看类的全名是否相同，还要看加载此类的类加载器是否一样。只有两者都相同的情况，才认为两个类是相同的。即便是同样的字节代码，被不同的类加载器加载之后所得到的类，也是不同的。比如一个 Java 类 com.example.Sample，编译之后生成了字节代码文件 Sample.class。两个不同的类加载器 ClassLoaderA和 ClassLoaderB分别读取了这个 Sample.class文件，并定义出两个 java.lang.Class类的实例来表示这个类。这两个实例是不相同的。对于 Java 虚拟机来说，它们是不同的类。试图对这两个类的对象进行相互赋值，会抛出运行时异常 ClassCastException。</p>
+<p>了解了这一点之后，就可以理解代理模式的设计动机了。代理模式是为了保证 Java 核心库的类型安全。所有 Java 应用都至少需要引用 java.lang.Object类，也就是说在运行的时候，java.lang.Object这个类需要被加载到 Java 虚拟机中。如果这个加载过程由 Java 应用自己的类加载器来完成的话，很可能就存在多个版本的 java.lang.Object类，而且这些类之间是不兼容的。通过代理模式，对于 Java 核心库的类的加载工作由引导类加载器来统一完成，保证了 Java 应用所使用的都是同一个版本的 Java 核心库的类，是互相兼容的。</p>
+<p>不同的类加载器为相同名称的类创建了额外的名称空间。相同名称的类可以并存在 Java 虚拟机中，只需要用不同的类加载器来加载它们即可。不同类加载器加载的类之间是不兼容的，这就相当于在 Java 虚拟机内部创建了一个个相互隔离的 Java 类空间。</p>
+<h3 id="加载类的过程"><a href="#加载类的过程" class="headerlink" title="加载类的过程"></a>加载类的过程</h3><p>在前面介绍类加载器的代理模式的时候，提到过类加载器会首先代理给其它类加载器来尝试加载某个类。这就意味着真正完成类的加载工作的类加载器和启动这个加载过程的类加载器，有可能不是同一个。真正完成类的加载工作是通过调用 defineClass来实现的；而启动类的加载过程是通过调用 loadClass来实现的。前者称为一个类的定义加载器（defining loader），后者称为初始加载器（initiating loader）。在 Java 虚拟机判断两个类是否相同的时候，使用的是类的定义加载器。也就是说，哪个类加载器启动类的加载过程并不重要，重要的是最终定义这个类的加载器。两种类加载器的关联之处在于：一个类的定义加载器是它引用的其它类的初始加载器。如类 com.example.Outer引用了类 com.example.Inner，则由类 com.example.Outer的定义加载器负责启动类 com.example.Inner的加载过程。</p>
+<p>方法 loadClass()抛出的是 java.lang.ClassNotFoundException异常；方法 defineClass()抛出的是 java.lang.NoClassDefFoundError异常。</p>
+<p>类加载器在成功加载某个类之后，会把得到的 java.lang.Class类的实例缓存起来。下次再请求加载该类的时候，类加载器会直接使用缓存的类的实例，而不会尝试再次加载。也就是说，对于一个类加载器实例来说，相同全名的类只加载一次，即 loadClass方法不会被重复调用。</p>
+<h3 id="线程上下文类加载器"><a href="#线程上下文类加载器" class="headerlink" title="线程上下文类加载器"></a>线程上下文类加载器</h3><p>线程上下文类加载器（context class loader）是从 JDK 1.2 开始引入的。类 java.lang.Thread中的方法 getContextClassLoader()和 setContextClassLoader(ClassLoader cl)用来获取和设置线程的上下文类加载器。如果没有通过 setContextClassLoader(ClassLoader cl)方法进行设置的话，线程将继承其父线程的上下文类加载器。Java 应用运行的初始线程的上下文类加载器是系统类加载器。在线程中运行的代码可以通过此类加载器来加载类和资源。</p>
+<p>前面提到的类加载器的代理模式并不能解决 Java 应用开发中会遇到的类加载器的全部问题。Java 提供了很多服务提供者接口（Service Provider Interface，SPI），允许第三方为这些接口提供实现。常见的 SPI 有 JDBC、JCE、JNDI、JAXP 和 JBI 等。这些 SPI 的接口由 Java 核心库来提供，如 JAXP 的 SPI 接口定义包含在 javax.xml.parsers包中。这些 SPI 的实现代码很可能是作为 Java 应用所依赖的 jar 包被包含进来，可以通过类路径（CLASSPATH）来找到，如实现了 JAXP SPI 的 Apache Xerces所包含的 jar 包。SPI 接口中的代码经常需要加载具体的实现类。如 JAXP 中的 javax.xml.parsers.DocumentBuilderFactory类中的 newInstance()方法用来生成一个新的 DocumentBuilderFactory的实例。这里的实例的真正的类是继承自 javax.xml.parsers.DocumentBuilderFactory，由 SPI 的实现所提供的。如在 Apache Xerces 中，实现的类是 org.apache.xerces.jaxp.DocumentBuilderFactoryImpl。而问题在于，SPI 的接口是 Java 核心库的一部分，是由引导类加载器来加载的；SPI 实现的 Java 类一般是由系统类加载器来加载的。引导类加载器是无法找到 SPI 的实现类的，因为它只加载 Java 的核心库。它也不能代理给系统类加载器，因为它是系统类加载器的祖先类加载器。也就是说，类加载器的代理模式无法解决这个问题。</p>
+<p>线程上下文类加载器正好解决了这个问题。如果不做任何的设置，Java 应用的线程的上下文类加载器默认就是系统上下文类加载器。在 SPI 接口的代码中使用线程上下文类加载器，就可以成功的加载到 SPI 实现的类。线程上下文类加载器在很多 SPI 的实现中都会用到。</p>
+<h3 id="Class-forName"><a href="#Class-forName" class="headerlink" title="Class.forName"></a>Class.forName</h3><p>Class.forName是一个静态方法，同样可以用来加载类。该方法有两种形式：Class.forName(String name, boolean initialize, ClassLoader loader)和 Class.forName(String className)。第一种形式的参数 name表示的是类的全名；initialize表示是否初始化类；loader表示加载时使用的类加载器。第二种形式则相当于设置了参数 initialize的值为 true，loader的值为当前类的类加载器。Class.forName的一个很常见的用法是在加载数据库驱动的时候。如 Class.forName(“org.apache.derby.jdbc.EmbeddedDriver”).newInstance()用来加载 Apache Derby 数据库的驱动。</p>
+<hr>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-classloader/index.html" target="_blank" rel="noopener">深入探讨 Java 类加载器</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/12/07/Anaconda-下安装-pyecharts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/07/Anaconda-下安装-pyecharts/" itemprop="url">Anaconda 下安装 pyecharts</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-07T16:40:00+08:00">
+                2018-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>克隆github库安装</strong></p>
+<p>因为我的系统里同时安装了 python2 python3，所以安装 pyecharts 颇费周折</p>
+<pre><code>git clone https://github.com/pyecharts/pyecharts.git
+cd pyecharts
+pip3 install -r requirements.txt
+python3 setup.py install
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/12/06/RNN-and-LSTM-转/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/06/RNN-and-LSTM-转/" itemprop="url">RNN and LSTM (转)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-06T13:29:00+08:00">
+                2018-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>原文见  杨健程  <a href="https://www.slideshare.net/ssuser6c624f/understanding-rnn-and-lstm" target="_blank" rel="noopener">RNN and LSTM </a></p>
+<p>本处引用仅供学习使用</p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-70.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-71.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-72.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-73.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-74.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-75.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-76.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-77.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-78.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-79.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-80.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-81.png" alt="upload successful"></p>
+<p><img src="/2018/12/06/RNN-and-LSTM-转/images/pasted-82.png" alt="upload successful"></p>
+<p><a href="http://www.wildml.com/2015/10/recurrent-neural-networks-tutorial-part-3-backpropagation-through-time-and-vanishing-gradients/" target="_blank" rel="noopener">Recurrent Neural Networks Tutorial</a></p>
+<p><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM Networks</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/13/jupyter-notebook-与-Nginx-集成/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/13/jupyter-notebook-与-Nginx-集成/" itemprop="url">jupyter notebook 与 Nginx 集成</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-13T14:55:00+08:00">
+                2018-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>1. 配置 jupyter notebook</strong></p>
+<pre><code>vim /roo/.jupyter/jupyter_notebook_config.py
+</code></pre><p>编辑 C.NotebookApp.base_url </p>
+<p><img src="/2018/11/13/jupyter-notebook-与-Nginx-集成/images/pasted-69.png" alt="upload successful"></p>
+<p><strong> 注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦</strong></p>
+<p><strong>2. 配置 Nginx</strong></p>
+<pre><code>        location ^~ /ipython/ {
+        proxy_pass  http://www.domain.com:port;     
+        proxy_set_header    Referer   http://www.isaac-li.com:9527;  
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # WebSocket support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade &quot;websocket&quot;;
+        proxy_set_header Connection &quot;Upgrade&quot;;
+        proxy_read_timeout 86400;
+        proxy_redirect off;
+
+    }
+
+
+    location ~* /(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/? {
+       proxy_pass  http://www.domain.com:port;
+       proxy_set_header    Referer   http://www.isaac-li.com:9527;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # WebSocket support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade &quot;websocket&quot;;
+        proxy_set_header Connection &quot;Upgrade&quot;;
+        proxy_read_timeout 86400;
+        proxy_redirect off;
+} 
+</code></pre><p><a href="http://www.domain.com:port" target="_blank" rel="noopener">www.domain.com:port</a> 需要根据实际情况换成自己的域名和端口号，端口号为 jupyter notebook 服务端口</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/13/Nginx-配置问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/13/Nginx-配置问题/" itemprop="url">Nginx 配置问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-13T13:19:00+08:00">
+                2018-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在配置Nginx时遇到了一类配置问题，这类问题很容易被忽略，但是影响很大</p>
+<p>在proxy_pass 配置里 URL路径最后是否有 / 直接影响了 Nginx 的解析路径，要特别注意。</p>
+<pre><code>location /proxy/ {
+    proxy_pass http://127.0.0.1/;
+}
+代理到URL：http://127.0.0.1/
+
+location /proxy/ {
+    proxy_pass http://127.0.0.1;
+}
+代理到URL：http://127.0.0.1/proxy/
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/06/Hexo-与-Nginx-的集成/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/06/Hexo-与-Nginx-的集成/" itemprop="url">Hexo 与 Nginx 的集成</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T10:59:00+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>使用 Hexo 时最麻烦的事情应该是贴图了，问题主要出现在如何把图片的网络请求路径解析成实际存储路径这个过程中。本文记录了使用 Nginx 集成 Hexo 解决图片显示问题的技术步骤。</p>
+<p><strong>1. 编辑 Post</strong></p>
+<p>使用 Hexo Admin 插件进行 Post 编辑时直接可以直接使用 Ctrl+C/Ctrl+V 贴图，成功后会有如下信息</p>
+<p><img src="/2018/11/06/Hexo-与-Nginx-的集成/images/pasted-67.png" alt="upload successful"><br>这时图片是存放在 Hexo目录下的子目录 Source/images 目录中</p>
+<p><strong>2. 发布 Post</strong></p>
+<p>使用 Hexo g 命令发布 Post，这时图片会存在 Hexo目录下的子目录 public/images 目录中</p>
+<p><strong>3. 配置 Nginx</strong></p>
+<p>根据 Hexo Admin 插件命名图片的格式，在 nginx.conf 文件中配置如下，把 png 类型的图片请求路径映射到 public/images/目录下</p>
+<p><img src="/2018/11/06/Hexo-与-Nginx-的集成/images/pasted-68.png" alt="upload successful"></p>
+<p>上述方法实测有效。现在发布 Post，只需要运行 Hexo g 命令即可。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/03/服务器启动时自动启动-nginx-服务/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -754,8 +1759,8 @@ nsenter --target &quot;$CPID&quot; --mount --uts --ipc --net --pid
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/BigData/" itemprop="url" rel="index">
-                    <span itemprop="name">BigData</span>
+                  <a href="/categories/Big-Data/" itemprop="url" rel="index">
+                    <span itemprop="name">Big Data</span>
                   </a>
                 </span>
 
@@ -845,1084 +1850,6 @@ nsenter --target &quot;$CPID&quot; --mount --uts --ipc --net --pid
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/27/Java-并发编程最佳实践/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/27/Java-并发编程最佳实践/" itemprop="url">Java 并发编程最佳实践</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-27T21:51:00+08:00">
-                2018-10-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li>使用本地变量</li>
-<li>使用不可变类</li>
-<li>最小化锁的作用域范围：S=1/（1-a+a/n）</li>
-<li>使用线程池的 Executor，而不是直接 new Thread</li>
-<li>宁可使用同步也不要使用线程的 wait 和 notif 方法</li>
-<li>使用 BlockingQueue 实现生产-消费模式</li>
-<li>使用并发集合而不是加了锁的同步集合</li>
-<li>使用 Semaphore 创建有届的访问</li>
-<li>宁可使用同步代码块，也不使用同步的方法</li>
-<li>避免使用静态变量</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/19/Java-并发编程知识汇总/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/19/Java-并发编程知识汇总/" itemprop="url">Java 并发编程知识汇总</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-19T21:48:00+08:00">
-                2018-10-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>1. Volatile</strong></p>
-<p>1）Volatile 不具有原子性，不适合计数这种场景<br>    使用Volatile必须要具备两个条件：</p>
-<pre><code>A。对变量的写操作不依赖当前值
-B。该变量没有包含在具有其他变量不变的式子中
-</code></pre><p> 适合的使用场景：</p>
-<pre><code>A。特别适合状态标记量
-B。Double Check
-</code></pre><p> <strong>2. 有序性</strong></p>
-<p> 关键字与有序性：<br> Volatile 可以保证一定的有序性<br> Synchronize Lock 可以保证有序性</p>
-<p> happens-before 原则</p>
-<pre><code> 1）程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作
-2）锁定规则：一个unlock操作先行发生于后面对同一个锁的lock操作
-3）Volatile变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作
-4）传递规则：如果操作A先行发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C
-5）线程启动规则：Thread对象的start（）方法先行发生于此线程的每一个动作
-6）线程中断规则：对线程interrupt（）方法的调用先行发生于被中断线程的代码检测到中断事件的发生
-7）线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join（）方法结束、Thread.isAlive（）的返回值手段检测到线程已经终止执行
-8）对象终结规则：一个对象的初始化完成先行发生于他的finalize（）方法的开始
-</code></pre><p><strong>3. 安全发布对象</strong></p>
-<p>参考单例模式</p>
-<pre><code>1）在静态初始化函数中初始化一个对象引用
-2）将对象的引用保存到volatile类型域或者AtomicReference对象
-3）将对象的引用保存到某个正确构造对象的final类型中
-4）将对象的引用保存到一个由锁保护的域中
-</code></pre><p>单例对象 volatile + 双重检测机制 -&gt;禁止指令重排</p>
-<p><img src="/2018/10/19/Java-并发编程知识汇总/images/pasted-61.png" alt="upload successful"><br>单例模式-枚举模式 使用枚举来实例化最安全，JVM保证枚举初始化只调用一次。相比于懒汉模式，安全性更容易保证，相比于饿汉模式是在实际调用的时候才初始化实例。推荐使用。</p>
-<p><img src="/2018/10/19/Java-并发编程知识汇总/images/pasted-60.png" alt="upload successful"></p>
-<p><strong>4 避免并发的方法</strong></p>
-<pre><code>1）使用不可变对象
-2）线程封闭
-   A。Ad-hoc 线程封闭：程序控制实现，最糟糕，忽略
-   B。堆栈封闭：局部变量，无并发问题。能用局部变量的就不用全局变量，全局变量容易引起并发问题。
-   C。ThreadLocal 线程封闭：利用 map 实现了线程封闭
-</code></pre><p><strong>5. 线程安全与不安全的类</strong></p>
-<pre><code>线程不安全的类              线程安全的类
-StringBuilder                StringBuffer
-SimpleDateFormat             Datetime(Joda-Time包）
-ArrayList                    Vector  Stack
-HashSet 
-HashMap                      HashTable 
-                             Collections.synchronizedXXX (List Set Map)
-</code></pre><p>使用同步容器时，不一定能做到所有场合都是线程安全的。Vector 也可能出现线程不安全的情况</p>
-<p><img src="/2018/10/19/Java-并发编程知识汇总/images/pasted-62.png" alt="upload successful"></p>
-<p>线程不安全写法：先检查再执行  if(condition(a)) { handle(a);}</p>
-<p>注意：如果对象是多线程共享的，解决方法是加锁，或者保证上述两个操作是原子性的。</p>
-<p><strong>注意事项</strong></p>
-<p>1） 在使用 Foreach 或 iterator 时操作集合时，尽量不要在操作的过程中进行 Remove 的操作。如果一定要进行 Remove 操作，建议在遍历的过程中先进行标记，在遍历完成后再进行 Remove 的操作。或者使用 for 循环进行增删操作的遍历。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/19/Eclipse-Slf4j-的配置与使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/19/Eclipse-Slf4j-的配置与使用/" itemprop="url">Eclipse-Slf4j 的配置与使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-19T14:32:00+08:00">
-                2018-10-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>安装 lombok</p>
-<p> 方法参加  <a href="https://projectlombok.org/setup/eclipse" target="_blank" rel="noopener">https://projectlombok.org/setup/eclipse</a></p>
-</li>
-<li><p>错误处理</p>
-</li>
-</ol>
-<p>lombok 安装后，在Java代码中是 @Slj4j 注解时编译通过，运行时抛错</p>
-<p><strong>错误Failed to load class org.slf4j.impl.StaticLoggerBinder </strong></p>
-<p>下面信息是官方给出的解决方案 <a href="https://www.slf4j.org/codes.html" target="_blank" rel="noopener">https://www.slf4j.org/codes.html</a></p>
-<p>Failed to load class org.slf4j.impl.StaticLoggerBinder</p>
-<p>This warning message is reported when the org.slf4j.impl.StaticLoggerBinder class could not be loaded into memory. This happens when no appropriate SLF4J binding could be found on the class path. Placing one (and only one) of slf4j-nop.jar slf4j-simple.jar, slf4j-log4j12.jar, slf4j-jdk14.jar or logback-classic.jar on the class path should solve the problem.</p>
-<p>SINCE 1.6.0 As of SLF4J version 1.6, in the absence of a binding, SLF4J will default to a no-operation (NOP) logger implementation.</p>
-<p>If you are responsible for packaging an application and do not care about logging, then placing slf4j-nop.jar on the class path of your application will get rid of this warning message. Note that embedded components such as libraries or frameworks should not declare a dependency on any SLF4J binding but only depend on slf4j-api. When a library declares a compile-time dependency on a SLF4J binding, it imposes that binding on the end-user, thus negating SLF4J’s purpose.</p>
-<p>解决办法：pom文件中加入 slf4j-log4j12 的引用，特别注意 Scope, 默认是 test，可以删除 scope</p>
-<p>修改后运行 java 项目，出现下列警告，但是控制台不能正常输出信息。</p>
-<pre><code>log4j:WARN No appenders could be found for logger.
-log4j:WARN Please initialize the log4j system properly.
-log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
-</code></pre><p><strong>解决方案</strong></p>
-<p>A. 修改 pom 文件里的引用，删除 slf4j-log4j12 引用，加入 log4j-slf4j-impl 和 log4j-core 引用。<br>    <dependencies></dependencies></p>
-<pre><code>&lt;!-- https://mvnrepository.com/artifact/org.projectlombok/lombok --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
-    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
-    &lt;version&gt;1.18.2&lt;/version&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-
-&lt;!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
-    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
-    &lt;version&gt;1.7.25&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl --&gt;
-&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-  &lt;artifactId&gt;log4j-slf4j-impl&lt;/artifactId&gt;
-  &lt;version&gt;2.1&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-    &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
-    &lt;version&gt;2.1&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;/dependencies&gt;    
-</code></pre><p>B. 在 src 目录下创建 resources 目录，并创建 log4j2.xml 文件，文件内容如下 </p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-</code></pre><!--设置log4j2的自身log级别为warn-->
-<pre><code>&lt;configuration status=&quot;info&quot;&gt;
-
-&lt;appenders&gt;
-    &lt;console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;
-        &lt;PatternLayout pattern=&quot;[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n&quot;/&gt;
-    &lt;/console&gt;
-
-    &lt;RollingFile name=&quot;RollingFileInfo&quot; fileName=&quot;${sys:user.home}/logs/hpaasvc/info.log&quot;
-                 filePattern=&quot;${sys:user.home}/logs/hpaasvc/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log&quot;&gt;
-        &lt;Filters&gt;
-            &lt;ThresholdFilter level=&quot;INFO&quot;/&gt;
-            &lt;ThresholdFilter level=&quot;WARN&quot; onMatch=&quot;DENY&quot; onMismatch=&quot;NEUTRAL&quot;/&gt;
-        &lt;/Filters&gt;
-        &lt;PatternLayout pattern=&quot;[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n&quot;/&gt;
-        &lt;Policies&gt;
-            &lt;TimeBasedTriggeringPolicy/&gt;
-            &lt;SizeBasedTriggeringPolicy size=&quot;100 MB&quot;/&gt;
-        &lt;/Policies&gt;
-    &lt;/RollingFile&gt;
-
-    &lt;RollingFile name=&quot;RollingFileWarn&quot; fileName=&quot;${sys:user.home}/logs/hpaasvc/warn.log&quot;
-                 filePattern=&quot;${sys:user.home}/logs/hpaasvc/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log&quot;&gt;
-        &lt;Filters&gt;
-            &lt;ThresholdFilter level=&quot;WARN&quot;/&gt;
-            &lt;ThresholdFilter level=&quot;ERROR&quot; onMatch=&quot;DENY&quot; onMismatch=&quot;NEUTRAL&quot;/&gt;
-        &lt;/Filters&gt;
-        &lt;PatternLayout pattern=&quot;[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n&quot;/&gt;
-        &lt;Policies&gt;
-            &lt;TimeBasedTriggeringPolicy/&gt;
-            &lt;SizeBasedTriggeringPolicy size=&quot;100 MB&quot;/&gt;
-        &lt;/Policies&gt;
-    &lt;/RollingFile&gt;
-
-    &lt;RollingFile name=&quot;RollingFileError&quot; fileName=&quot;${sys:user.home}/logs/hpaasvc/error.log&quot;
-                 filePattern=&quot;${sys:user.home}/logs/hpaasvc/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log&quot;&gt;
-        &lt;ThresholdFilter level=&quot;ERROR&quot;/&gt;
-        &lt;PatternLayout pattern=&quot;[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n&quot;/&gt;
-        &lt;Policies&gt;
-            &lt;TimeBasedTriggeringPolicy/&gt;
-            &lt;SizeBasedTriggeringPolicy size=&quot;100 MB&quot;/&gt;
-        &lt;/Policies&gt;
-    &lt;/RollingFile&gt;
-
-&lt;/appenders&gt;
-
-&lt;loggers&gt;
-    &lt;!--过滤掉spring和hibernate的一些无用的debug信息--&gt;
-    &lt;logger name=&quot;org.springframework&quot; level=&quot;INFO&quot;&gt;
-    &lt;/logger&gt;
-    &lt;logger name=&quot;org.hibernate&quot; level=&quot;INFO&quot;&gt;
-    &lt;/logger&gt;
-    &lt;root level=&quot;all&quot;&gt;
-        &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;appender-ref ref=&quot;RollingFileInfo&quot;/&gt;
-        &lt;appender-ref ref=&quot;RollingFileWarn&quot;/&gt;
-        &lt;appender-ref ref=&quot;RollingFileError&quot;/&gt;
-    &lt;/root&gt;
-&lt;/loggers&gt;
-
-&lt;/configuration&gt;
-</code></pre><p>C. 把 resources 目录加入 Java build Path</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/12/Flume：使用HBaseSinks时遇到的问题汇总/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/12/Flume：使用HBaseSinks时遇到的问题汇总/" itemprop="url">Flume：使用HBaseSinks时遇到的问题汇总</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-12T17:19:00+08:00">
-                2018-10-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Big-Data/" itemprop="url" rel="index">
-                    <span itemprop="name">Big Data</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>版本问题</strong> 在 HBase v2.1.0——Flume v1.8.0 环境下，如果使用 asynchbase 作为 sink’s type 的话，会报异常 </p>
-<p><img src="/2018/10/12/Flume：使用HBaseSinks时遇到的问题汇总/images/pasted-56.png" alt="upload successful"></p>
-<p><strong>解决办法</strong> 使用 HBbase v1.2.7</p>
-<p><strong>启动flume服务时抛异常</strong> 这类异常主要是 java.lang.NoClassDefFoundError 找不类定义异常。</p>
-<p><strong>解决办法</strong> 把 hadoop-common.jar hbase-common.jar zookeeper.jar 文件拷贝到 flume/lib 目录下</p>
-<p><img src="/2018/10/12/Flume：使用HBaseSinks时遇到的问题汇总/images/pasted-57.png" alt="upload successful"><br>对于这个异常，需要下载 woodstox-core-5.0.3.jar  stax2-api-4.0.0.jar,并拷贝到 flume/lib 目录下</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/09/Eclipse-编译-Flume/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/09/Eclipse-编译-Flume/" itemprop="url">Eclipse:编译 Flume 问题汇总</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-09T13:07:00+08:00">
-                2018-10-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Big-Data/" itemprop="url" rel="index">
-                    <span itemprop="name">Big Data</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>问题描述</strong>：在 Eclipse 中导入 Flume1.8.0 maven工程，出现错误信息 “AvroFlumeEvent cannot be resolved to a type”</p>
-<p><strong>问题原因</strong>：AvroFlumeEvent 的定义存在于 apache-flume-1.8.0-src\flume-ng-sdk\src\main\avro\flume.avdl 文件里</p>
-<p><strong>解决办法</strong>：</p>
-<ol>
-<li>先用maven编译 mvn clean compile</li>
-<li>再把编译出的 Java 文件加入 Build Path。选择 flume-ng-sdk，右键选择 Config Build Path，在 Source 页点击”Add Folder…”, 加入路径 flume-ng-sdk/target/generated-sources/avro</li>
-</ol>
-<p><strong>问题描述</strong>：在 Eclipse 中导入 Flume1.8.0 maven工程，出现错误信息 “AvroFlumeOGEvent cannot be resolved to a type” “FlumeOGEventAvroServer cannot be resolved to a type” “Priority cannot be reolved to a variable”</p>
-<p><strong>问题原因</strong>: 这三项的定义存在于 apache-flume-1.8.0-src\flume-ng-legacy-sources\flume-avro-source\src\main\avro\flumeCompatibility.avdl 文件里</p>
-<p><strong>解决办法</strong>：</p>
-<ol>
-<li>先用maven编译 mvn clean compile</li>
-<li>再把编译出的 Java 文件加入 Build Path。选择 flume-avro-source，右键选择 Config Build Path，在 Source 页点击”Add Folder…”, 加入路径 flume-ng-legacy-sources\flume-avro-source\target\generated-sources\avro\com\cloudera\flume\handlers\avro </li>
-</ol>
-<p><img src="/2018/10/09/Eclipse-编译-Flume/images/pasted-55.png" alt="upload successful"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/09/21/Hadoop-3-1-0-配置问题汇总/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/21/Hadoop-3-1-0-配置问题汇总/" itemprop="url">Hadoop 3.1.0 配置问题汇总</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T13:30:00+08:00">
-                2018-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Big-Data/" itemprop="url" rel="index">
-                    <span itemprop="name">Big Data</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>1. 格式化Name Node时报 URI错误：</strong></p>
-<p>hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠</p>
-<p><strong>2. hdfs 的web server 默认的端口号已变为 9870</strong></p>
-<p><strong>3. 用 IE 浏览器打开 NN 的界面时出错</strong></p>
-<p>错误信息是 NameNode is still loading, Redirecting to the Startup Progress page.</p>
-<p>解决办法：用chrome浏览器</p>
-<p><strong>4. 运行 mapreduce 时出错</strong></p>
-<p>错误信息：Could not find or load main class org.apache.hadoop.mapreduce.v2.app.MRAppMaster</p>
-<p>原因：yarn-site.xml 中，yarn.application.classpath 未配置</p>
-<p>解决办法：</p>
-<pre><code>&lt;property&gt;
-    &lt;name&gt;yarn.application.classpath&lt;/name&gt;
-    &lt;value&gt;
-        /opt/hadoop-3.1.0/etc/hadoop,
-        /opt/hadoop-3.1.0/share/hadoop/common/*,
-        /opt/hadoop-3.1.0/share/hadoop/common/lib/*,
-        /opt/hadoop-3.1.0/share/hadoop/hdfs/*,
-        /opt/hadoop-3.1.0/share/hadoop/hdfs/lib/*,
-        /opt/hadoop-3.1.0/share/hadoop/mapreduce/*,
-        /opt/hadoop-3.1.0/share/hadoop/mapreduce/lib/*,
-        /opt/hadoop-3.1.0/share/hadoop/yarn/*,
-        /opt/hadoop-3.1.0/share/hadoop/yarn/lib/*
-    &lt;/value&gt;
-&lt;/property&gt;
-</code></pre><p><strong>5. 运行 start-dfs.sh 脚本不能启动全部 DataNode</strong></p>
-<p>Hadoop v2.x 使用 slaves 文件，Hadoop v3.x 使用 workers 文件</p>
-<p>解决办法： List all worker hostnames or IP addresses in your etc/hadoop/workers file, one per line. Helper scripts (described below) will use the etc/hadoop/workers file to run commands on many hosts at once.</p>
-<p><strong>6. 运行 hdfs zkfc -formatZK 报错</strong></p>
-<p>错误信息：FATAL tools.DFSZKFailoverController: DFSZKFailOverController exiting due to earlier exception java.lang.NumberFormatException: For input string: “2181”</p>
-<p>原因： core-site.xml 文件中配置 ha.zookeeper.quorum 时，value值最后有空格。</p>
-<p><strong>7. 启动 zkfc 时报错</strong></p>
-<p>错误信息：ERROR：cannot set priority of zkfc process. 检查log文件，发现详细信息，Automatic failover is not enabled for NameNode.</p>
-<p>解决办法：把 NameNode1上修改的配置文件 core-site.xml 和 hdfs-site.xml 文件复制到 NameNode2 上。</p>
-<p><strong>8. 启动 hbase 时报错</strong></p>
-<p>错误信息：java.net.ConnectException: Call From bigdata01.isaac.com to bigdata01.isaac.com:8020 failed on connection exception: java.net.Connection</p>
-<p>Exception: Connection refused</p>
-<p>解决办法：查看 hadoop的 core-site.xml 文件，看 fs.defaultFS 配置的端口号，然后修改 hbase-site.xml 配置。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1977,7 +1904,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">40</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1999,7 +1926,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
