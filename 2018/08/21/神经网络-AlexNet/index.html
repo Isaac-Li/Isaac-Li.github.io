@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="一。AlexNet 网络结构 第一个模块 conv_1： 输入的图片大小为224x224x3 有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4. 第二个模块 conv_2: 输入的tensor为27x27x96 卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256. 同样紧跟ReLU,和LRN层.尺寸不变 最大池化层">
+<meta name="description" content="AlexNet 网络结构 第一个模块 conv_1：输入的图片大小为224x224x3 有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4. 第二个模块 conv_2:输入的tensor为27x27x96 卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256. 同样紧跟ReLU,和LRN层.尺寸不变 最大池化层,核大小">
 <meta name="keywords" content="AlexNet">
 <meta property="og:type" content="article">
 <meta property="og:title" content="神经网络-AlexNet">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/08/21/神经网络-AlexNet/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="一。AlexNet 网络结构 第一个模块 conv_1： 输入的图片大小为224x224x3 有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4. 第二个模块 conv_2: 输入的tensor为27x27x96 卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256. 同样紧跟ReLU,和LRN层.尺寸不变 最大池化层">
+<meta property="og:description" content="AlexNet 网络结构 第一个模块 conv_1：输入的图片大小为224x224x3 有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4. 第二个模块 conv_2:输入的tensor为27x27x96 卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256. 同样紧跟ReLU,和LRN层.尺寸不变 最大池化层,核大小">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://isaac-li.github.io/2018/08/21/神经网络-AlexNet/images/pasted-14.png">
-<meta property="og:updated_time" content="2018-08-21T09:34:36.440Z">
+<meta property="og:updated_time" content="2018-12-21T07:16:00.034Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络-AlexNet">
-<meta name="twitter:description" content="一。AlexNet 网络结构 第一个模块 conv_1： 输入的图片大小为224x224x3 有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4. 第二个模块 conv_2: 输入的tensor为27x27x96 卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256. 同样紧跟ReLU,和LRN层.尺寸不变 最大池化层">
+<meta name="twitter:description" content="AlexNet 网络结构 第一个模块 conv_1：输入的图片大小为224x224x3 有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4. 第二个模块 conv_2:输入的tensor为27x27x96 卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256. 同样紧跟ReLU,和LRN层.尺寸不变 最大池化层,核大小">
 <meta name="twitter:image" content="http://isaac-li.github.io/2018/08/21/神经网络-AlexNet/images/pasted-14.png">
 
 
@@ -354,31 +354,23 @@
       
 
       
-        <p>一。AlexNet 网络结构</p>
-<p><img src="/2018/08/21/神经网络-AlexNet/images/pasted-14.png" alt="upload successful"><br>第一个模块 conv_1：</p>
-<p>输入的图片大小为224x224x3</p>
+        <h4 id="AlexNet-网络结构"><a href="#AlexNet-网络结构" class="headerlink" title="AlexNet 网络结构"></a>AlexNet 网络结构</h4><p><img src="/2018/08/21/神经网络-AlexNet/images/pasted-14.png" alt="upload successful"></p>
+<h4 id="第一个模块-conv-1："><a href="#第一个模块-conv-1：" class="headerlink" title="第一个模块 conv_1："></a>第一个模块 conv_1：</h4><p>输入的图片大小为224x224x3</p>
 <p>有96个卷积核,尺寸为11x11,即11x11x96。步长（stride）为4.</p>
-<p>第二个模块 conv_2:</p>
-<p>输入的tensor为27x27x96</p>
+<h4 id="第二个模块-conv-2"><a href="#第二个模块-conv-2" class="headerlink" title="第二个模块 conv_2:"></a>第二个模块 conv_2:</h4><p>输入的tensor为27x27x96</p>
 <p>卷积核的大小为: 5x5x256,步长为1,因此，步长为1时，feature map为27x27x256.</p>
 <p>同样紧跟ReLU,和LRN层.尺寸不变</p>
 <p>最大池化层,核大小为3x3,步长为2</p>
-<p>第三个模块 conv_3:</p>
-<p>输入tensor为13x13x256</p>
+<h4 id="第三个模块-conv-3"><a href="#第三个模块-conv-3" class="headerlink" title="第三个模块 conv_3:"></a>第三个模块 conv_3:</h4><p>输入tensor为13x13x256</p>
 <p>卷积核 3x3x384,步长为1,feature map为:13x13x384</p>
 <p>加上ReLU，尺寸不变</p>
 <p>无最大池化层</p>
-<p>第四个模块 conv_4:</p>
-<p>配置和conv_3一样，因此feature map为:13x13x384</p>
-<p>第五个模块 conv_5:</p>
-<p>输入tensor为13x13x384</p>
+<h4 id="第四个模块-conv-4"><a href="#第四个模块-conv-4" class="headerlink" title="第四个模块 conv_4:"></a>第四个模块 conv_4:</h4><p>配置和conv_3一样，因此feature map为:13x13x384</p>
+<h4 id="第五个模块-conv-5"><a href="#第五个模块-conv-5" class="headerlink" title="第五个模块 conv_5:"></a>第五个模块 conv_5:</h4><p>输入tensor为13x13x384</p>
 <p>卷积核 3x3x256,步长为1,feature map为:13x13x256<br>加上ReLU，尺寸不变<br>最大池化层，核大小3x3, 步长为2, 因此feature map:6x6x256</p>
-<p>第六个模块 fc_1:</p>
-<p>卷积核6x6x256x4096，输出为一维向量，4096个元素。<br>加上ReLU，尺寸不变</p>
-<p>第七个模块 fc_2:</p>
-<p>输出为一维向量，4096个元素。<br>加上ReLU，尺寸不变</p>
-<p>第8个模块 fc_3:</p>
-<p>输出为一维向量，1000个元素。最后一层用了softmax，输出为1000个种类的各类概率值.</p>
+<h4 id="第六个模块-fc-1"><a href="#第六个模块-fc-1" class="headerlink" title="第六个模块 fc_1:"></a>第六个模块 fc_1:</h4><p>卷积核6x6x256x4096，输出为一维向量，4096个元素。<br>加上ReLU，尺寸不变</p>
+<h4 id="第七个模块-fc-2"><a href="#第七个模块-fc-2" class="headerlink" title="第七个模块 fc_2:"></a>第七个模块 fc_2:</h4><p>输出为一维向量，4096个元素。<br>加上ReLU，尺寸不变</p>
+<h4 id="第8个模块-fc-3"><a href="#第8个模块-fc-3" class="headerlink" title="第8个模块 fc_3:"></a>第8个模块 fc_3:</h4><p>输出为一维向量，1000个元素。最后一层用了softmax，输出为1000个种类的各类概率值.</p>
 
       
     </div>
@@ -473,8 +465,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -493,7 +494,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -504,7 +505,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -515,7 +516,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -554,6 +555,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#AlexNet-网络结构"><span class="nav-number">1.</span> <span class="nav-text">AlexNet 网络结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第一个模块-conv-1："><span class="nav-number">2.</span> <span class="nav-text">第一个模块 conv_1：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二个模块-conv-2"><span class="nav-number">3.</span> <span class="nav-text">第二个模块 conv_2:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三个模块-conv-3"><span class="nav-number">4.</span> <span class="nav-text">第三个模块 conv_3:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第四个模块-conv-4"><span class="nav-number">5.</span> <span class="nav-text">第四个模块 conv_4:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第五个模块-conv-5"><span class="nav-number">6.</span> <span class="nav-text">第五个模块 conv_5:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第六个模块-fc-1"><span class="nav-number">7.</span> <span class="nav-text">第六个模块 fc_1:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第七个模块-fc-2"><span class="nav-number">8.</span> <span class="nav-text">第七个模块 fc_2:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第8个模块-fc-3"><span class="nav-number">9.</span> <span class="nav-text">第8个模块 fc_3:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

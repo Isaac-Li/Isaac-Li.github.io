@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1. 格式化Name Node时报 URI错误： hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠 2. hdfs 的web server 默认的端口号已变为 9870 3. 用 IE 浏览器打开 NN 的界面时出错 错误信息是 NameNode is still loading, Redirecting">
+<meta name="description" content="1. 格式化Name Node时报 URI错误：hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠 2. hdfs 的web server 默认的端口号已变为 98703. 用 IE 浏览器打开 NN 的界面时出错错误信息是 NameNode is still loading, Redirecting to">
 <meta name="keywords" content="Hadoop">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop 3.1.0 配置问题汇总">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/09/21/Hadoop-3-1-0-配置问题汇总/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="1. 格式化Name Node时报 URI错误： hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠 2. hdfs 的web server 默认的端口号已变为 9870 3. 用 IE 浏览器打开 NN 的界面时出错 错误信息是 NameNode is still loading, Redirecting">
+<meta property="og:description" content="1. 格式化Name Node时报 URI错误：hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠 2. hdfs 的web server 默认的端口号已变为 98703. 用 IE 浏览器打开 NN 的界面时出错错误信息是 NameNode is still loading, Redirecting to">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-30T07:00:56.293Z">
+<meta property="og:updated_time" content="2018-12-21T07:01:06.046Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop 3.1.0 配置问题汇总">
-<meta name="twitter:description" content="1. 格式化Name Node时报 URI错误： hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠 2. hdfs 的web server 默认的端口号已变为 9870 3. 用 IE 浏览器打开 NN 的界面时出错 错误信息是 NameNode is still loading, Redirecting">
+<meta name="twitter:description" content="1. 格式化Name Node时报 URI错误：hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠 2. hdfs 的web server 默认的端口号已变为 98703. 用 IE 浏览器打开 NN 的界面时出错错误信息是 NameNode is still loading, Redirecting to">
 
 
 
@@ -352,14 +352,10 @@
       
 
       
-        <p><strong>1. 格式化Name Node时报 URI错误：</strong></p>
-<p>hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠</p>
-<p><strong>2. hdfs 的web server 默认的端口号已变为 9870</strong></p>
-<p><strong>3. 用 IE 浏览器打开 NN 的界面时出错</strong></p>
-<p>错误信息是 NameNode is still loading, Redirecting to the Startup Progress page.</p>
+        <h4 id="1-格式化Name-Node时报-URI错误："><a href="#1-格式化Name-Node时报-URI错误：" class="headerlink" title="1. 格式化Name Node时报 URI错误："></a>1. 格式化Name Node时报 URI错误：</h4><p>hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠</p>
+<h4 id="2-hdfs-的web-server-默认的端口号已变为-9870"><a href="#2-hdfs-的web-server-默认的端口号已变为-9870" class="headerlink" title="2. hdfs 的web server 默认的端口号已变为 9870"></a>2. hdfs 的web server 默认的端口号已变为 9870</h4><h4 id="3-用-IE-浏览器打开-NN-的界面时出错"><a href="#3-用-IE-浏览器打开-NN-的界面时出错" class="headerlink" title="3. 用 IE 浏览器打开 NN 的界面时出错"></a>3. 用 IE 浏览器打开 NN 的界面时出错</h4><p>错误信息是 NameNode is still loading, Redirecting to the Startup Progress page.</p>
 <p>解决办法：用chrome浏览器</p>
-<p><strong>4. 运行 mapreduce 时出错</strong></p>
-<p>错误信息：Could not find or load main class org.apache.hadoop.mapreduce.v2.app.MRAppMaster</p>
+<h4 id="4-运行-mapreduce-时出错"><a href="#4-运行-mapreduce-时出错" class="headerlink" title="4. 运行 mapreduce 时出错"></a>4. 运行 mapreduce 时出错</h4><p>错误信息：Could not find or load main class org.apache.hadoop.mapreduce.v2.app.MRAppMaster</p>
 <p>原因：yarn-site.xml 中，yarn.application.classpath 未配置</p>
 <p>解决办法：</p>
 <pre><code>&lt;property&gt;
@@ -376,17 +372,13 @@
         /opt/hadoop-3.1.0/share/hadoop/yarn/lib/*
     &lt;/value&gt;
 &lt;/property&gt;
-</code></pre><p><strong>5. 运行 start-dfs.sh 脚本不能启动全部 DataNode</strong></p>
-<p>Hadoop v2.x 使用 slaves 文件，Hadoop v3.x 使用 workers 文件</p>
+</code></pre><h4 id="5-运行-start-dfs-sh-脚本不能启动全部-DataNode"><a href="#5-运行-start-dfs-sh-脚本不能启动全部-DataNode" class="headerlink" title="5. 运行 start-dfs.sh 脚本不能启动全部 DataNode"></a>5. 运行 start-dfs.sh 脚本不能启动全部 DataNode</h4><p>Hadoop v2.x 使用 slaves 文件，Hadoop v3.x 使用 workers 文件</p>
 <p>解决办法： List all worker hostnames or IP addresses in your etc/hadoop/workers file, one per line. Helper scripts (described below) will use the etc/hadoop/workers file to run commands on many hosts at once.</p>
-<p><strong>6. 运行 hdfs zkfc -formatZK 报错</strong></p>
-<p>错误信息：FATAL tools.DFSZKFailoverController: DFSZKFailOverController exiting due to earlier exception java.lang.NumberFormatException: For input string: “2181”</p>
+<h4 id="6-运行-hdfs-zkfc-formatZK-报错"><a href="#6-运行-hdfs-zkfc-formatZK-报错" class="headerlink" title="6. 运行 hdfs zkfc -formatZK 报错"></a>6. 运行 hdfs zkfc -formatZK 报错</h4><p>错误信息：FATAL tools.DFSZKFailoverController: DFSZKFailOverController exiting due to earlier exception java.lang.NumberFormatException: For input string: “2181”</p>
 <p>原因： core-site.xml 文件中配置 ha.zookeeper.quorum 时，value值最后有空格。</p>
-<p><strong>7. 启动 zkfc 时报错</strong></p>
-<p>错误信息：ERROR：cannot set priority of zkfc process. 检查log文件，发现详细信息，Automatic failover is not enabled for NameNode.</p>
+<h4 id="7-启动-zkfc-时报错"><a href="#7-启动-zkfc-时报错" class="headerlink" title="7. 启动 zkfc 时报错"></a>7. 启动 zkfc 时报错</h4><p>错误信息：ERROR：cannot set priority of zkfc process. 检查log文件，发现详细信息，Automatic failover is not enabled for NameNode.</p>
 <p>解决办法：把 NameNode1上修改的配置文件 core-site.xml 和 hdfs-site.xml 文件复制到 NameNode2 上。</p>
-<p><strong>8. 启动 hbase 时报错</strong></p>
-<p>错误信息：java.net.ConnectException: Call From bigdata01.isaac.com to bigdata01.isaac.com:8020 failed on connection exception: java.net.Connection</p>
+<h4 id="8-启动-hbase-时报错"><a href="#8-启动-hbase-时报错" class="headerlink" title="8. 启动 hbase 时报错"></a>8. 启动 hbase 时报错</h4><p>错误信息：java.net.ConnectException: Call From bigdata01.isaac.com to bigdata01.isaac.com:8020 failed on connection exception: java.net.Connection</p>
 <p>Exception: Connection refused</p>
 <p>解决办法：查看 hadoop的 core-site.xml 文件，看 fs.defaultFS 配置的端口号，然后修改 hbase-site.xml 配置。</p>
 
@@ -483,8 +475,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -503,7 +504,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -514,7 +515,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -525,7 +526,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -564,6 +565,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-格式化Name-Node时报-URI错误："><span class="nav-number">1.</span> <span class="nav-text">1. 格式化Name Node时报 URI错误：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-hdfs-的web-server-默认的端口号已变为-9870"><span class="nav-number">2.</span> <span class="nav-text">2. hdfs 的web server 默认的端口号已变为 9870</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-用-IE-浏览器打开-NN-的界面时出错"><span class="nav-number">3.</span> <span class="nav-text">3. 用 IE 浏览器打开 NN 的界面时出错</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-运行-mapreduce-时出错"><span class="nav-number">4.</span> <span class="nav-text">4. 运行 mapreduce 时出错</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-运行-start-dfs-sh-脚本不能启动全部-DataNode"><span class="nav-number">5.</span> <span class="nav-text">5. 运行 start-dfs.sh 脚本不能启动全部 DataNode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-运行-hdfs-zkfc-formatZK-报错"><span class="nav-number">6.</span> <span class="nav-text">6. 运行 hdfs zkfc -formatZK 报错</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-启动-zkfc-时报错"><span class="nav-number">7.</span> <span class="nav-text">7. 启动 zkfc 时报错</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-启动-hbase-时报错"><span class="nav-number">8.</span> <span class="nav-text">8. 启动 hbase 时报错</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

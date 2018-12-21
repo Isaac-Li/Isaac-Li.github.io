@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="一、安装编译工具及库文件 yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel 二、安装 PCREPCRE 作用是让 Nginx 支持 Rewrite 功能。 1、下载 PCRE 安装包，下载地址：http://downloads.sourceforge.net/project/pcre/pcre/8.">
+<meta name="description" content="一、安装编译工具及库文件yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel 二、安装 PCREPCRE 作用是让 Nginx 支持 Rewrite 功能。 1、下载 PCRE 安装包，下载地址：http://downloads.sourceforge.net/project/pcre/pcre/8.4">
 <meta name="keywords" content="Nginx">
 <meta property="og:type" content="article">
 <meta property="og:title" content="nginx 安装配置">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/07/09/nginx-安装配置/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="一、安装编译工具及库文件 yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel 二、安装 PCREPCRE 作用是让 Nginx 支持 Rewrite 功能。 1、下载 PCRE 安装包，下载地址：http://downloads.sourceforge.net/project/pcre/pcre/8.">
+<meta property="og:description" content="一、安装编译工具及库文件yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel 二、安装 PCREPCRE 作用是让 Nginx 支持 Rewrite 功能。 1、下载 PCRE 安装包，下载地址：http://downloads.sourceforge.net/project/pcre/pcre/8.4">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-09T05:06:26.081Z">
+<meta property="og:updated_time" content="2018-12-21T07:29:39.302Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx 安装配置">
-<meta name="twitter:description" content="一、安装编译工具及库文件 yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel 二、安装 PCREPCRE 作用是让 Nginx 支持 Rewrite 功能。 1、下载 PCRE 安装包，下载地址：http://downloads.sourceforge.net/project/pcre/pcre/8.">
+<meta name="twitter:description" content="一、安装编译工具及库文件yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel 二、安装 PCREPCRE 作用是让 Nginx 支持 Rewrite 功能。 1、下载 PCRE 安装包，下载地址：http://downloads.sourceforge.net/project/pcre/pcre/8.4">
 
 
 
@@ -352,9 +352,8 @@
       
 
       
-        <p>一、安装编译工具及库文件</p>
-<pre><code>yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
-</code></pre><p>二、安装 PCRE<br>PCRE 作用是让 Nginx 支持 Rewrite 功能。</p>
+        <h4 id="一、安装编译工具及库文件"><a href="#一、安装编译工具及库文件" class="headerlink" title="一、安装编译工具及库文件"></a>一、安装编译工具及库文件</h4><pre><code>yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
+</code></pre><h4 id="二、安装-PCRE"><a href="#二、安装-PCRE" class="headerlink" title="二、安装 PCRE"></a>二、安装 PCRE</h4><p>PCRE 作用是让 Nginx 支持 Rewrite 功能。</p>
 <p>1、下载 PCRE 安装包，下载地址：<a href="http://downloads.sourceforge.net/project/pcre/pcre/8.42/pcre-8.42.tar.gz" target="_blank" rel="noopener">http://downloads.sourceforge.net/project/pcre/pcre/8.42/pcre-8.42.tar.gz</a></p>
 <pre><code>wget http://downloads.sourceforge.net/project/pcre/pcre/8.42/pcre-8.42.tar.gz
 </code></pre><p>2、解压安装包</p>
@@ -366,8 +365,7 @@
 make &amp;&amp; make install
 </code></pre><p>5、查看pcre版本</p>
 <pre><code>pcre-config --version
-</code></pre><p>三、安装 Nginx</p>
-<p>1、下载 Nginx，下载地址：<a href="http://nginx.org/download/nginx-1.14.0.tar.gz" target="_blank" rel="noopener">http://nginx.org/download/nginx-1.14.0.tar.gz</a>    </p>
+</code></pre><h4 id="三、安装-Nginx"><a href="#三、安装-Nginx" class="headerlink" title="三、安装 Nginx"></a>三、安装 Nginx</h4><p>1、下载 Nginx，下载地址：<a href="http://nginx.org/download/nginx-1.14.0.tar.gz" target="_blank" rel="noopener">http://nginx.org/download/nginx-1.14.0.tar.gz</a>    </p>
 <pre><code>wget http://nginx.org/download/nginx-1.14.0.tar.gz
 </code></pre><p>2、解压安装包</p>
 <pre><code>tar -zxvf nginx-1.14.0.tar.gz
@@ -386,8 +384,7 @@ make
 <pre><code>make install
 </code></pre><p>5、查看nginx版本</p>
 <pre><code>/usr/local/nginx/nginx -v    
-</code></pre><p>四、Nginx 配置</p>
-<p>1、创建 Nginx 运行使用的用户和用户组 nginx</p>
+</code></pre><h4 id="四、Nginx-配置"><a href="#四、Nginx-配置" class="headerlink" title="四、Nginx 配置"></a>四、Nginx 配置</h4><p>1、创建 Nginx 运行使用的用户和用户组 nginx</p>
 <pre><code>groupadd nginx
 useradd -g nginx nginx
 </code></pre><p>2、配置nginx.conf    </p>
@@ -398,8 +395,7 @@ error_log /usr/local/nginx/logs/nginx_error.log
 pid /usr/loacl/nginx/nginx.pid
 gzip on;
 charset gb2312;
-</code></pre><p>五、启动 Nginx</p>
-<p>Nginx 启动命令如下：</p>
+</code></pre><h4 id="五、启动-Nginx"><a href="#五、启动-Nginx" class="headerlink" title="五、启动 Nginx"></a>五、启动 Nginx</h4><p>Nginx 启动命令如下：</p>
 <pre><code>/usr/local/nginx/nginx -t
 </code></pre>
       
@@ -495,8 +491,17 @@ charset gb2312;
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -515,7 +520,7 @@ charset gb2312;
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -526,7 +531,7 @@ charset gb2312;
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -537,7 +542,7 @@ charset gb2312;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -576,6 +581,22 @@ charset gb2312;
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、安装编译工具及库文件"><span class="nav-number">1.</span> <span class="nav-text">一、安装编译工具及库文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、安装-PCRE"><span class="nav-number">2.</span> <span class="nav-text">二、安装 PCRE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、安装-Nginx"><span class="nav-number">3.</span> <span class="nav-text">三、安装 Nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、Nginx-配置"><span class="nav-number">4.</span> <span class="nav-text">四、Nginx 配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、启动-Nginx"><span class="nav-number">5.</span> <span class="nav-text">五、启动 Nginx</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="1. 配置 jupyter notebook vim /roo/.jupyter/jupyter_notebook_config.py 编辑 C.NotebookApp.base_url    注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦 2. 配置 Nginx         location">
+<meta name="description" content="1. 配置 jupyter notebookvim /roo/.jupyter/jupyter_notebook_config.py 编辑 C.NotebookApp.base_url    注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦 2. 配置 Nginx        location ^~">
 <meta name="keywords" content="Nginx,Jupyter">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jupyter notebook 与 Nginx 集成">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/11/13/jupyter-notebook-与-Nginx-集成/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="1. 配置 jupyter notebook vim /roo/.jupyter/jupyter_notebook_config.py 编辑 C.NotebookApp.base_url    注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦 2. 配置 Nginx         location">
+<meta property="og:description" content="1. 配置 jupyter notebookvim /roo/.jupyter/jupyter_notebook_config.py 编辑 C.NotebookApp.base_url    注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦 2. 配置 Nginx        location ^~">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://isaac-li.github.io/2018/11/13/jupyter-notebook-与-Nginx-集成/images/pasted-69.png">
-<meta property="og:updated_time" content="2018-11-13T07:02:54.293Z">
+<meta property="og:updated_time" content="2018-12-21T06:54:37.825Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jupyter notebook 与 Nginx 集成">
-<meta name="twitter:description" content="1. 配置 jupyter notebook vim /roo/.jupyter/jupyter_notebook_config.py 编辑 C.NotebookApp.base_url    注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦 2. 配置 Nginx         location">
+<meta name="twitter:description" content="1. 配置 jupyter notebookvim /roo/.jupyter/jupyter_notebook_config.py 编辑 C.NotebookApp.base_url    注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦 2. 配置 Nginx        location ^~">
 <meta name="twitter:image" content="http://isaac-li.github.io/2018/11/13/jupyter-notebook-与-Nginx-集成/images/pasted-69.png">
 
 
@@ -354,13 +354,11 @@
       
 
       
-        <p><strong>1. 配置 jupyter notebook</strong></p>
-<pre><code>vim /roo/.jupyter/jupyter_notebook_config.py
+        <h4 id="1-配置-jupyter-notebook"><a href="#1-配置-jupyter-notebook" class="headerlink" title="1. 配置 jupyter notebook"></a>1. 配置 jupyter notebook</h4><pre><code>vim /roo/.jupyter/jupyter_notebook_config.py
 </code></pre><p>编辑 C.NotebookApp.base_url </p>
 <p><img src="/2018/11/13/jupyter-notebook-与-Nginx-集成/images/pasted-69.png" alt="upload successful"></p>
 <p><strong> 注意：这里一定要给个路径，不能直接使用 / 作为路径！原因是 nginx 需要根据路径进行解析，如果使用 / 作为路径，nginx的配置会非常麻烦</strong></p>
-<p><strong>2. 配置 Nginx</strong></p>
-<pre><code>        location ^~ /ipython/ {
+<h4 id="2-配置-Nginx"><a href="#2-配置-Nginx" class="headerlink" title="2. 配置 Nginx"></a>2. 配置 Nginx</h4><pre><code>        location ^~ /ipython/ {
         proxy_pass  http://www.domain.com:port;     
         proxy_set_header    Referer   http://www.isaac-li.com:9527;  
         proxy_set_header X-Real-IP $remote_addr;
@@ -486,8 +484,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -506,7 +513,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -517,7 +524,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -528,7 +535,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -567,6 +574,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-配置-jupyter-notebook"><span class="nav-number">1.</span> <span class="nav-text">1. 配置 jupyter notebook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-配置-Nginx"><span class="nav-number">2.</span> <span class="nav-text">2. 配置 Nginx</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

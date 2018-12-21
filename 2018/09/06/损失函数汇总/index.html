@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="1. 0-1损失函数和绝对值损失函数    0-1损失是指，预测值和目标值不相等为1，否则为0：    感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&amp;lt;T 时认为相等。     绝对值损失函数为：  L(Y,f(X)=|Y−f(X)| 2. Logistic regression       logistic regression可以">
+<meta name="description" content="1. 0-1损失函数和绝对值损失函数  0-1损失是指，预测值和目标值不相等为1，否则为0：    感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&amp;lt;T 时认为相等。     绝对值损失函数为：  L(Y,f(X)=|Y−f(X)| 2. Logistic regression     logistic regression可以将实数域">
 <meta name="keywords" content="Cost Function">
 <meta property="og:type" content="article">
 <meta property="og:title" content="损失函数汇总">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/09/06/损失函数汇总/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="1. 0-1损失函数和绝对值损失函数    0-1损失是指，预测值和目标值不相等为1，否则为0：    感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&amp;lt;T 时认为相等。     绝对值损失函数为：  L(Y,f(X)=|Y−f(X)| 2. Logistic regression       logistic regression可以">
+<meta property="og:description" content="1. 0-1损失函数和绝对值损失函数  0-1损失是指，预测值和目标值不相等为1，否则为0：    感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&amp;lt;T 时认为相等。     绝对值损失函数为：  L(Y,f(X)=|Y−f(X)| 2. Logistic regression     logistic regression可以将实数域">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://isaac-li.github.io/2018/09/06/损失函数汇总/images/pasted-46.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/09/06/损失函数汇总/images/pasted-47.png">
@@ -96,10 +96,10 @@
 <meta property="og:image" content="http://isaac-li.github.io/2018/09/06/损失函数汇总/images/pasted-50.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/09/06/损失函数汇总/images/pasted-51.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/09/06/损失函数汇总/images/pasted-52.png">
-<meta property="og:updated_time" content="2018-09-12T03:34:33.617Z">
+<meta property="og:updated_time" content="2018-12-21T07:10:36.287Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="损失函数汇总">
-<meta name="twitter:description" content="1. 0-1损失函数和绝对值损失函数    0-1损失是指，预测值和目标值不相等为1，否则为0：    感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&amp;lt;T 时认为相等。     绝对值损失函数为：  L(Y,f(X)=|Y−f(X)| 2. Logistic regression       logistic regression可以">
+<meta name="twitter:description" content="1. 0-1损失函数和绝对值损失函数  0-1损失是指，预测值和目标值不相等为1，否则为0：    感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&amp;lt;T 时认为相等。     绝对值损失函数为：  L(Y,f(X)=|Y−f(X)| 2. Logistic regression     logistic regression可以将实数域">
 <meta name="twitter:image" content="http://isaac-li.github.io/2018/09/06/损失函数汇总/images/pasted-46.png">
 
 
@@ -362,29 +362,24 @@
       
 
       
-        <p><strong>1. 0-1损失函数和绝对值损失函数 </strong></p>
-<p>  0-1损失是指，预测值和目标值不相等为1，否则为0：</p>
+        <h4 id="1-0-1损失函数和绝对值损失函数"><a href="#1-0-1损失函数和绝对值损失函数" class="headerlink" title="1. 0-1损失函数和绝对值损失函数"></a>1. 0-1损失函数和绝对值损失函数</h4><p>  0-1损失是指，预测值和目标值不相等为1，否则为0：</p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-46.png" alt="upload successful"></p>
 <p>  感知机就是用的这种损失函数。但是由于相等这个条件太过严格，因此我们可以放宽条件，即满足 |Y−f(X)|&lt;T 时认为相等。 </p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-47.png" alt="upload successful"></p>
 <p>  绝对值损失函数为：<br>  L(Y,f(X)=|Y−f(X)|</p>
-<p><strong>2. Logistic regression </strong></p>
-<p><img src="/2018/09/06/损失函数汇总/images/pasted-44.png" alt="upload successful"></p>
+<h4 id="2-Logistic-regression"><a href="#2-Logistic-regression" class="headerlink" title="2. Logistic regression"></a>2. Logistic regression</h4><p><img src="/2018/09/06/损失函数汇总/images/pasted-44.png" alt="upload successful"></p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-45.png" alt="upload successful"><br>    logistic regression可以将实数域的输入映射为0到1的概率输出</p>
-<p><strong>3. 平方损失函数</strong></p>
-<p>  最小二乘法是线性回归的一种方法，它将回归的问题转化为了凸优化的问题。最小二乘法的基本原则是：最优拟合曲线应该使得所有点到回归直线的距离和最小。通常用欧几里得距离进行距离的度量。平方损失的损失函数为： </p>
+<h4 id="3-平方损失函数"><a href="#3-平方损失函数" class="headerlink" title="3. 平方损失函数"></a>3. 平方损失函数</h4><p>  最小二乘法是线性回归的一种方法，它将回归的问题转化为了凸优化的问题。最小二乘法的基本原则是：最优拟合曲线应该使得所有点到回归直线的距离和最小。通常用欧几里得距离进行距离的度量。平方损失的损失函数为： </p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-48.png" alt="upload successful"></p>
-<p><strong>4.  指数损失函数 </strong></p>
-<p>  指数损失是0-1损失函数的一种代理函数。运用指数损失的典型分类器是AdaBoost算法。<br>  指数损失函数的标准形式： </p>
+<h4 id="4-指数损失函数"><a href="#4-指数损失函数" class="headerlink" title="4.  指数损失函数"></a>4.  指数损失函数</h4><p>  指数损失是0-1损失函数的一种代理函数。运用指数损失的典型分类器是AdaBoost算法。<br>  指数损失函数的标准形式： </p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-49.png" alt="upload successful"></p>
-<p><strong>5. Hinge损失函数 </strong></p>
-<p>  Hinge损失函数和SVM是息息相关的。在线性支持向量机中，最优化问题可以等价于 </p>
+<h4 id="5-Hinge损失函数"><a href="#5-Hinge损失函数" class="headerlink" title="5. Hinge损失函数"></a>5. Hinge损失函数</h4><p>  Hinge损失函数和SVM是息息相关的。在线性支持向量机中，最优化问题可以等价于 </p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-50.png" alt="upload successful"></p>
 <p>  这个式子和如下的式子非常像： </p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-51.png" alt="upload successful"></p>
 <p>  其中l(wxi+byi)就是hinge损失函数，后面相当于L2正则项。<br>  Hinge函数的标准形式： </p>
 <p><img src="/2018/09/06/损失函数汇总/images/pasted-52.png" alt="upload successful"></p>
-<p>  y是预测值，在-1到+1之间，t为目标值（-1或+1）。其含义为，y的值在-1和+1之间就可以了，并不鼓励|y|&gt;1，即并不鼓励分类器过度自信，让某个正确分类的样本的距离分割线超过1并不会有任何奖励，从而使分类器可以更专注于整体的分类误差。  </p>
+<p>  y是预测值，在-1到+1之间，t为目标值（-1或+1）。其含义为，y的值在-1和+1之间就可以了，并不鼓励|y|&gt;1，即并不鼓励分类器过度自信，让某个正确分类的样本的距离分割线超过1并不会有任何奖励，从而使分类器可以更专注于整体的分类误差。</p>
 
       
     </div>
@@ -479,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -499,7 +503,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -510,7 +514,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -521,7 +525,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -560,6 +564,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-0-1损失函数和绝对值损失函数"><span class="nav-number">1.</span> <span class="nav-text">1. 0-1损失函数和绝对值损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Logistic-regression"><span class="nav-number">2.</span> <span class="nav-text">2. Logistic regression</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-平方损失函数"><span class="nav-number">3.</span> <span class="nav-text">3. 平方损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-指数损失函数"><span class="nav-number">4.</span> <span class="nav-text">4.  指数损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Hinge损失函数"><span class="nav-number">5.</span> <span class="nav-text">5. Hinge损失函数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

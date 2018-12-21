@@ -79,23 +79,23 @@
 
 
 
-<meta name="description" content="VGG 网络结构图   VGG的特点： 小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）； 小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核； 层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓； 全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得">
+<meta name="description" content="VGG 网络结构图  VGG的特点：小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）； 小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核； 层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓； 全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得测试">
 <meta name="keywords" content="VGG">
 <meta property="og:type" content="article">
 <meta property="og:title" content="神经网络-VGG">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/08/24/神经网络-VGG/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="VGG 网络结构图   VGG的特点： 小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）； 小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核； 层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓； 全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得">
+<meta property="og:description" content="VGG 网络结构图  VGG的特点：小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）； 小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核； 层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓； 全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得测试">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://isaac-li.github.io/2018/08/24/神经网络-VGG/images/pasted-20.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/08/24/神经网络-VGG/images/pasted-19.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/08/24/神经网络-VGG/images/pasted-15.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/08/24/神经网络-VGG/images/pasted-16.png">
 <meta property="og:image" content="http://isaac-li.github.io/2018/08/24/神经网络-VGG/images/pasted-18.png">
-<meta property="og:updated_time" content="2018-08-24T03:20:35.212Z">
+<meta property="og:updated_time" content="2018-12-21T07:14:17.975Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络-VGG">
-<meta name="twitter:description" content="VGG 网络结构图   VGG的特点： 小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）； 小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核； 层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓； 全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得">
+<meta name="twitter:description" content="VGG 网络结构图  VGG的特点：小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）； 小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核； 层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓； 全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得测试">
 <meta name="twitter:image" content="http://isaac-li.github.io/2018/08/24/神经网络-VGG/images/pasted-20.png">
 
 
@@ -358,22 +358,18 @@
       
 
       
-        <p>VGG 网络结构图</p>
-<p><img src="/2018/08/24/神经网络-VGG/images/pasted-20.png" alt="upload successful"></p>
+        <h4 id="VGG-网络结构图"><a href="#VGG-网络结构图" class="headerlink" title="VGG 网络结构图"></a>VGG 网络结构图</h4><p><img src="/2018/08/24/神经网络-VGG/images/pasted-20.png" alt="upload successful"></p>
 <p><img src="/2018/08/24/神经网络-VGG/images/pasted-19.png" alt="upload successful"></p>
-<p>VGG的特点：</p>
-<p>小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）；</p>
+<h4 id="VGG的特点："><a href="#VGG的特点：" class="headerlink" title="VGG的特点："></a>VGG的特点：</h4><p>小卷积核。作者将卷积核全部替换为3x3（极少用了1x1）；</p>
 <p>小池化核。相比AlexNet的3x3的池化核，VGG全部为2x2的池化核；</p>
 <p>层数更深特征图更宽。基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓；</p>
 <p>全连接转卷积。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得测试得到的全卷积网络因为没有全连接的限制，因而可以接收任意宽或高为的输入。</p>
-<p>特征图</p>
-<p>网络在随层数递增的过程中，通过池化也逐渐忽略局部信息，特征图的宽度高度随着每个池化操作缩小50%，5个池化l操作使得宽或者高度变化过程为：224-&gt;112-&gt;56-&gt;28-&gt;14-&gt;7，但是深度depth（或说是channel数），随着5组卷积在每次增大一倍：3-&gt;64-&gt;128-&gt;256-&gt;512-&gt;512。特征信息从一开始输入的224x224x3被变换到7x7x512，从原本较为local的信息逐渐分摊到不同channel上，随着每次的conv和pool操作打散到channel层级上。</p>
+<h4 id="特征图"><a href="#特征图" class="headerlink" title="特征图"></a>特征图</h4><p>网络在随层数递增的过程中，通过池化也逐渐忽略局部信息，特征图的宽度高度随着每个池化操作缩小50%，5个池化l操作使得宽或者高度变化过程为：224-&gt;112-&gt;56-&gt;28-&gt;14-&gt;7，但是深度depth（或说是channel数），随着5组卷积在每次增大一倍：3-&gt;64-&gt;128-&gt;256-&gt;512-&gt;512。特征信息从一开始输入的224x224x3被变换到7x7x512，从原本较为local的信息逐渐分摊到不同channel上，随着每次的conv和pool操作打散到channel层级上。</p>
 <p>特征图的宽高从512后开始进入全连接层，因为全连接层相比卷积层更考虑全局信息，将原本有局部信息的特征图（既有width，height还有channel）全部映射到4096维度。也就是说全连接层前是7x7x512维度的特征图，估算大概是25000，这个全连接过程要将25000映射到4096，大概是5000，换句话说全连接要将信息压缩到原来的五分之一。VGGNet有三个全连接，我的理解是作者认为这个映射过程的学习要慢点来，太快不易于捕捉特征映射来去之间的细微变化，让backprop学的更慢更细一些（更逐渐）。</p>
 <p>换句话说，维度在最后一个卷积后达到7x7x512，即大概25000，紧接着压缩到4096维，可能是作者认为这个过程太急，又接一个fc4096作为缓冲，同时两个fc4096后的relu又接dropout0.5去过渡这个过程，因为最后即将给1k-way softmax，所以又接了一个fc1000去降低softmax的学习压力。</p>
 <p>feature map维度的整体变化过程是：先将local信息压缩，并分摊到channel层级，然后无视channel和local，通过fc这个变换再进一步压缩为稠密的feature map，这样对于分类器而言有好处也有坏处，好处是将local信息隐藏于/压缩到feature map中，坏处是信息压缩都是有损失的，相当于local信息被破坏了（分类器没有考虑到，其实对于图像任务而言，单张feature map上的local信息还是有用的）。</p>
 <p>但其实不难发现，卷积只增加feature map的通道数，而池化只减少feature map的宽高。如今也有不少做法用大stride卷积去替代池化，未来可能没有池化。</p>
-<p>卷积组</p>
-<p>说到特征图的变化，我们可以进一步切分网络观察整体结构，再次拿出CS231n的博客里的描述网络结构的layer pattern：INPUT -&gt; [[CONV -&gt; RELU]<em>N -&gt; POOL?]</em>M -&gt; [FC -&gt; RELU]*K -&gt; FC，以pooling操作为切分点对整个网络分组的话，我们会得到五组卷积，五组卷积中有2种卷积组的形式，切分后的VGG网络可以描述成下面这样：</p>
+<h4 id="卷积组"><a href="#卷积组" class="headerlink" title="卷积组"></a>卷积组</h4><p>说到特征图的变化，我们可以进一步切分网络观察整体结构，再次拿出CS231n的博客里的描述网络结构的layer pattern：INPUT -&gt; [[CONV -&gt; RELU]<em>N -&gt; POOL?]</em>M -&gt; [FC -&gt; RELU]*K -&gt; FC，以pooling操作为切分点对整个网络分组的话，我们会得到五组卷积，五组卷积中有2种卷积组的形式，切分后的VGG网络可以描述成下面这样：</p>
 <p>前两组卷积形式一样，每组都是：conv-relu-conv-relu-pool；</p>
 <p>中间三组卷积形式一样，每组都是：conv-relu-conv-relu-conv-relu-pool；</p>
 <p>最后三个组全连接fc层，前两组fc，每组都是：fc-relu-dropout；最后一个fc仅有fc。</p>
@@ -383,18 +379,14 @@
 <p>多出的conv对网络中层进一步进行学习指导和控制不要将特征信息漂移到channel级别上。</p>
 <p>上一点更多的是relu的带来的理解，那么多出的[conv-relu]中conv的意味就是模型更强的对数据分布学习过程的约束力/控制力，做到信息backprop可以回传回来的学习指导。本身多了relu特征变换就加剧（权力释放），那么再用一个conv去控制（权力回收），也在指导网络中层的收敛；</p>
 <p>其实conv本身关注单张feature map上的局部信息，也是在尝试去尽量平衡已经失衡的channel级别（depth）和local级别（width、height）之间的天平。这个conv控制着特征的信息量不要过于向着channel级别偏移。</p>
-<p>输入层</p>
-<p>大都是2的N次方，这和网络中卷积或者池化层出现的stride为2的次数有关，比方VGGNet中每个pattern的卷积不会对feature map的宽度和高度有改变，而每个pattern结束前总会做一个stride为2的下采样，因为有5组，那么做5次就是32，所以VGGNet网络input大小一般都是32的倍数，即，n是下采样的次数，a是最终卷积和池化得到的feature map大小，如224或者384。</p>
-<p>卷积层</p>
-<p>现在常用的是小卷积核如3x3或者1x1。卷积为了保留feature map不变，通常会采取pad为1的操作，其实具体来说应该是：为了保证卷积后的feature map的宽度和高度不变，那么有pad=(F-1)/2，但我觉得这个有点问题，可以改成更一般的形式，不过首先可以看看计算下一层feature map宽高的公式：</p>
+<h4 id="输入层"><a href="#输入层" class="headerlink" title="输入层"></a>输入层</h4><p>大都是2的N次方，这和网络中卷积或者池化层出现的stride为2的次数有关，比方VGGNet中每个pattern的卷积不会对feature map的宽度和高度有改变，而每个pattern结束前总会做一个stride为2的下采样，因为有5组，那么做5次就是32，所以VGGNet网络input大小一般都是32的倍数，即，n是下采样的次数，a是最终卷积和池化得到的feature map大小，如224或者384。</p>
+<h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h4><p>现在常用的是小卷积核如3x3或者1x1。卷积为了保留feature map不变，通常会采取pad为1的操作，其实具体来说应该是：为了保证卷积后的feature map的宽度和高度不变，那么有pad=(F-1)/2，但我觉得这个有点问题，可以改成更一般的形式，不过首先可以看看计算下一层feature map宽高的公式：</p>
 <p>因为要保证和一样，有，那么可以导出：</p>
 <p>当Stride=1时，那么pad=(F-1)/2。因为现在stride=1的3x3卷积用的多，所以大家会默认说是pad=1（关于这点上，也是由于实验发现这样保留feature map的宽高情况下，性能好的缘故，我认为填补主要是针对stride大于1的情况带来的边界问题，如果input尺寸不是事先设定的，那么就会有边界无法卷积到的问题带来信息丢失。不过这种填补我认为也有一定问题，就是说原本conv3x3去计算对应位置的3x3，而填补后为0，这样相当于少算了一些值，这肯定还是有影响的）。但若stride不是1，那么要保证前后feature map的宽高一样，就要根据上面的公式计算得出。</p>
 <p>另一个点是通常与Input比较接近的conv会采用大卷积核。关于接近input层使用较大的卷积核这点，我认为先是考虑到后面的操作，先尽可能用大的卷积核cover更多的原始信息（虽然经过了卷积有一些变换），第二点在于大卷积核带来的大感受野，后面的卷积层能的一个神经元能看到更大的input，第三点是GPU的显存受限，经典的例子就是AlexNet使用stride=4的conv11x11，目的就是从一开始就减少显存占用，其实这里的大stride，我觉得起到了一些正则的作用。但缺点也很明显，因为卷积核变大，矩阵乘法实现卷积时，若没有大stride，那么第一个矩阵的列数，也就是第二个矩阵的行数，会变大，带来大的计算量。所以在AlexNet中，大卷积核也对应使用了大的stride值。</p>
-<p>池化层</p>
-<p>常见2x2的max-pooling，少见3x3或者更大的kernel。更大的kernel带来的问题是信息丢失带来的信息损失，此外，stride通常为2；<br>在当时也有average pooling，但是在图像任务上max-pooling的效果更胜一筹，所以图像大多使用max-pooling。在这里我认为max-pooling更容易捕捉图像上的变化，梯度的变化，带来更大的局部信息差异性，更好地描述边缘、纹理等构成语义的细节信息，这点尤其体现在网络可视化上。</p>
+<h4 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h4><p>常见2x2的max-pooling，少见3x3或者更大的kernel。更大的kernel带来的问题是信息丢失带来的信息损失，此外，stride通常为2；<br>在当时也有average pooling，但是在图像任务上max-pooling的效果更胜一筹，所以图像大多使用max-pooling。在这里我认为max-pooling更容易捕捉图像上的变化，梯度的变化，带来更大的局部信息差异性，更好地描述边缘、纹理等构成语义的细节信息，这点尤其体现在网络可视化上。</p>
 <p>其实按照以上的设定看来，也是有好处的。卷积专注于保留空间信息前提下的channel变换，而池化则专注于空间信息的变换（下采样）。</p>
-<p>全连接转卷积</p>
-<p>VGG比较神奇的一个特点就是“全连接转卷积”, 也就是说，作者在测试阶段把网络中原本的三个全连接层依次变为1个conv7x7，2个conv1x1，也就是三个卷积层。改变之后，整个网络由于没有了全连接层，网络中间的feature map不会固定，所以网络对任意大小的输入都可以处理.</p>
+<h4 id="全连接转卷积"><a href="#全连接转卷积" class="headerlink" title="全连接转卷积"></a>全连接转卷积</h4><p>VGG比较神奇的一个特点就是“全连接转卷积”, 也就是说，作者在测试阶段把网络中原本的三个全连接层依次变为1个conv7x7，2个conv1x1，也就是三个卷积层。改变之后，整个网络由于没有了全连接层，网络中间的feature map不会固定，所以网络对任意大小的输入都可以处理.</p>
 <p><img src="/2018/08/24/神经网络-VGG/images/pasted-15.png" alt="upload successful"></p>
 <p>上图是VGG网络最后三层的替换过程，上半部分是训练阶段，此时最后三层都是全连接层（输出分别是4096、4096、1000），下半部分是测试阶段（输出分别是1x1x4096、1x1x4096、1x1x1000），最后三层都是卷积层。下面我们来看一下详细的转换过程（以下过程都没有考虑bias，略了）：</p>
 <p>先看训练阶段，有4096个输出的全连接层FC6的输入是一个7x7x512的feature map，因为全连接层的缘故，不需要考虑局部性， 可以把7x7x512看成一个整体，25508（=7x7x512）个输入的每个元素都会与输出的每个元素（或者说是神经元）产生连接，所以每个输入都会有4096个系数对应4096个输出，所以网络的参数（也就是两层之间连线的个数，也就是每个输入元素的系数个数）规模就是7x7x512x4096。对于FC7，输入是4096个，输出是4096个，因为每个输入都会和输出相连，即每个输出都有4096条连线（系数），那么4096个输入总共有4096x4096条连线（系数），最后一个FC8计算方式一样，略。</p>
@@ -405,19 +397,19 @@
 <p><img src="/2018/08/24/神经网络-VGG/images/pasted-16.png" alt="upload successful"></p>
 <p>不过可以看到，训练阶段用的是crop或者resize到14x14的输入图像，而测试阶段可以接收任意维度，如果使用未经crop的原图作为输入（假设原图比crop或者resize到训练尺度的图像要大），这会带来一个问题：feature map变大了。比方VGG训练阶段用224x224x3的图作为模型输入，经过5组卷积和池化，最后到7x7x512维度，最后经过无论是三个卷积或者三个全连接，维度都会到1x1x4096-&gt;1x1x4096-&gt;1x1x1000，而使用384x384x3的图做模型输入，到五组卷积和池化做完（即），那么feature map变为12x12x512，经过三个由全连接变的三个卷积，即feature map经历了6x6x4096-&gt;6x6x4096-&gt;6x6x1000的变化过程后，再把这个6x6x1000的feature map进行average，最终交给SoftMax的是1x1x1000的feature map进行分类。</p>
 <p>以上便是将全连接转换成卷积以及将转换后的全卷积网络应用到测试阶段的方式。其实进一步来看卷积与全连接，二者最明显的差异不外乎一个前者是局部连接，但其实二者都有用到全局信息，只是卷积是通过层层堆叠来利用的，而全连接就不用说了，全连接的方式直接将上一层的特征图全部用上，稀疏性比较大，而卷积从网络深度这一角度，基于输入到当前层这一过程逐级逐层榨取的方式利用全局信息</p>
-<p>1x1卷积</p>
-<p>VGG在最后的三个阶段都用到了1x1卷积核，选用1x1卷积核的最直接原因是在维度上继承全连接，然而作者首先认为1x1卷积可以增加决策函数（decision function，这里的决策函数我认为就是softmax）的非线性能力，非线性是由激活函数ReLU决定的，本身1x1卷积则是线性映射，即将输入的feature map映射到同样维度的feature map。</p>
-<p>1x1卷积的特点：</p>
+<h4 id="1x1卷积"><a href="#1x1卷积" class="headerlink" title="1x1卷积"></a>1x1卷积</h4><p>VGG在最后的三个阶段都用到了1x1卷积核，选用1x1卷积核的最直接原因是在维度上继承全连接，然而作者首先认为1x1卷积可以增加决策函数（decision function，这里的决策函数我认为就是softmax）的非线性能力，非线性是由激活函数ReLU决定的，本身1x1卷积则是线性映射，即将输入的feature map映射到同样维度的feature map。</p>
+<p><strong>1x1卷积的特点：</strong></p>
 <p>专注于跨通道的特征组合：conv1x1根本不考虑单通道上像素的局部信息（不考虑局部信息），专注于那一个卷积核内部通道的信息整合。conv3x3既考虑跨通道，也考虑局部信息整合；</p>
 <p>对feature map的channel级别降维或升维：例如224x224x100的图像（或feature map）经过20个conv1x1的卷积核，得到224x224x20的feature map。尤其当卷积核（即filter）数量达到上百个时，3x3或5x5卷积的计算会非常耗时，所以1x1卷积在3x3或5x5卷积计算前先降低feature map的维度。</p>
 <p><img src="/2018/08/24/神经网络-VGG/images/pasted-18.png" alt="upload successful"></p>
-<p>实验结论</p>
+<p><strong>实验结论</strong></p>
 <p>因为作者自己在下面实验的缘故，当然没有测试集的ground truth类别，所以作者就用验证集当做测试集来观察模型性能。这里作者使用两种方式来评估模型在测试集（实际的验证集）的性能表现：single scale evaluation和multi-scale evaluation。实验结论：</p>
 <p>LRN层无性能增益（A和A-LRN）。作者通过网络A和A-LRN发现AlexNet曾经用到的LRN层（local response normalization，LRN是一种跨通道去normalize像素值的方法）没有性能提升，因此在后面的4组网络中均没再出现LRN层。 当然我也感觉没啥用，想到max-pooling比average-pooling效果好，我就感觉这个LRN没啥用，不过如果把LRN改成跨通道的max-normal，我感觉说不定会有性能提升。特征得到retain更明显。</p>
 <p>深度增加，分类性能提高（A、B、C、D、E）。从11层的A到19层的E，网络深度增加对top1和top5的error下降很明显，所以作者得出这个结论，但其实除了深度外，其他几个网络宽度等因素也在变化，depth matters的结论不够convincing。</p>
 <p>conv1x1的非线性变化有作用（C和D）。C和D网络层数相同，但D将C的3个conv3x3换成了conv1x1，性能提升。这点我理解是，跨通道的信息交换/融合，可以产生丰富的特征易于分类器学习。conv1x1相比conv3x3不会去学习local的局部像素信息，专注于跨通道的信息交换/融合，同时为后面全连接层（全连接层相当于global卷积）做准备，使之学习过程更自然。</p>
 <p>多小卷积核比单大卷积核性能好（B）。作者做了实验用B和自己一个不在实验组里的较浅网络比较，较浅网络用conv5x5来代替B的两个conv3x3。多个小卷积核比单大卷积核效果好，换句话说当考虑卷积核大小时：depths matters。</p>
-<p>引用：<br><a href="https://blog.csdn.net/jyy555555/article/details/80515562" target="_blank" rel="noopener">https://blog.csdn.net/jyy555555/article/details/80515562</a></p>
+<hr>
+<h4 id="引用："><a href="#引用：" class="headerlink" title="引用："></a>引用：</h4><p><a href="https://blog.csdn.net/jyy555555/article/details/80515562" target="_blank" rel="noopener">VGG网络模型详解</a></p>
 
       
     </div>
@@ -512,8 +504,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -532,7 +533,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -543,7 +544,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -554,7 +555,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -593,6 +594,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#VGG-网络结构图"><span class="nav-number">1.</span> <span class="nav-text">VGG 网络结构图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VGG的特点："><span class="nav-number">2.</span> <span class="nav-text">VGG的特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特征图"><span class="nav-number">3.</span> <span class="nav-text">特征图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积组"><span class="nav-number">4.</span> <span class="nav-text">卷积组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输入层"><span class="nav-number">5.</span> <span class="nav-text">输入层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积层"><span class="nav-number">6.</span> <span class="nav-text">卷积层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#池化层"><span class="nav-number">7.</span> <span class="nav-text">池化层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全连接转卷积"><span class="nav-number">8.</span> <span class="nav-text">全连接转卷积</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1x1卷积"><span class="nav-number">9.</span> <span class="nav-text">1x1卷积</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用："><span class="nav-number">10.</span> <span class="nav-text">引用：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

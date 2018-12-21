@@ -259,6 +259,602 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/03/服务器启动时自动启动-nginx-服务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/03/服务器启动时自动启动-nginx-服务/" itemprop="url">服务器启动时自动启动 nginx 服务</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-03T22:52:00+08:00">
+                2018-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>编辑 /etc/rc.local 文件, 加入启动 nginx 服务的命令</p>
+</li>
+<li><p>编辑 nginx.conf 文件， 在第一行加入下列语句即可</p>
+</li>
+</ol>
+<p><img src="/2018/11/03/服务器启动时自动启动-nginx-服务/images/pasted-64.png" alt="upload successful"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/03/启动-Docker-脚本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/03/启动-Docker-脚本/" itemprop="url">进入 Docker 容器脚本</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-03T20:16:00+08:00">
+                2018-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>进入 Docker 容器比较麻烦，不易使用，可以使用下面的脚本</p>
+<p>in.sh</p>
+<pre><code>#!/bin/bash
+CNAME=$1
+echo $1
+CPID=$(docker inspect --format &quot;{{.State.Pid}}&quot; $CNAME)
+nsenter --target &quot;$CPID&quot; --mount --uts --ipc --net --pid
+</code></pre><p>使用方法 ./in.sh xxx    xxx 为 docker 容器名称</p>
+<p>注意： 要给 in.sh 脚本可执行权限</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/11/03/Hexo-后台运行/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/03/Hexo-后台运行/" itemprop="url">Hexo 后台运行</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-03T18:59:00+08:00">
+                2018-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>使用 Hexo 服务时经常会遇到一个问题，就是退出 SSH 连接后 Hexo 的服务也退出了，遇到这种情况可以使用下面的命令启动 Hexo 服务</p>
+<pre><code>nohup hexo server -d &amp;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/29/Spark-RDD、DataFrame和Dataset/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Isaac Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Isaac Li">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/29/Spark-RDD、DataFrame和Dataset/" itemprop="url">Spark-RDD、DataFrame和Dataset</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-29T14:06:00+08:00">
+                2018-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Big-Data/" itemprop="url" rel="index">
+                    <span itemprop="name">Big Data</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="在什么情况下使用RDD？"><a href="#在什么情况下使用RDD？" class="headerlink" title="在什么情况下使用RDD？"></a>在什么情况下使用RDD？</h4><p>下面是使用RDD的场景和常见案例：</p>
+<pre><code>1) 你希望可以对你的数据集进行最基本的转换、处理和控制；
+2) 你的数据是非结构化的，比如流媒体或者字符流；
+3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据；
+4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性；
+5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据处理所能获得的一些优化和性能上的好处；
+</code></pre><h4 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h4><p>与RDD相似，DataFrame也是数据的一个不可变分布式集合。但与RDD不同的是，数据都被组织到有名字的列中，就像关系型数据库中的表一样。设计DataFrame的目的就是要让对大型数据集的处理变得更简单，它让开发者可以为分布式的数据集指定一个模式，进行更高层次的抽象。</p>
+<h4 id="该什么时候使用DataFrame或Dataset呢？"><a href="#该什么时候使用DataFrame或Dataset呢？" class="headerlink" title="该什么时候使用DataFrame或Dataset呢？"></a>该什么时候使用DataFrame或Dataset呢？</h4><pre><code>1) 如果你需要丰富的语义、高级抽象和特定领域专用的API，那就使用DataFrame或Dataset；
+2) 如果你的处理需要对半结构化数据进行高级处理，如filter、map、aggregation、average、sum、SQL查询、列式访问或使用lambda函数，那就使用DataFrame或Dataset；
+3) 如果你想在编译时就有高度的类型安全，想要有类型的JVM对象，用上Catalyst优化，并得益于Tungsten生成的高效代码，那就使用Dataset；
+4) 如果你想在不同的Spark库之间使用一致和简化的API，那就使用DataFrame或Dataset；
+5) 如果你是R语言使用者，就用DataFrame；
+6) 如果你是Python语言使用者，就用DataFrame，在需要更细致的控制时就退回去使用RDD；
+</code></pre><p><img src="/2018/10/29/Spark-RDD、DataFrame和Dataset/images/pasted-63.png" alt="upload successful"><br>上图直观地体现了DataFrame和RDD的区别。左侧的RDD[Person]虽然以Person为类型参数，但Spark框架本身不了解Person类的内部结构。而右侧的DataFrame却提供了详细的结构信息，使得Spark SQL可以清楚地知道该数据集中包含哪些列，每列的名称和类型各是什么。DataFrame多了数据的结构信息，即schema。RDD是分布式的Java对象的集合。DataFrame是分布式的Row对象的集合。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/10/27/Java-并发编程最佳实践/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -505,15 +1101,13 @@
       
         
           
-            <p><strong>1. Volatile</strong></p>
-<p>1）Volatile 不具有原子性，不适合计数这种场景<br>    使用Volatile必须要具备两个条件：</p>
+            <h4 id="1-Volatile"><a href="#1-Volatile" class="headerlink" title="1. Volatile"></a>1. Volatile</h4><p>1）Volatile 不具有原子性，不适合计数这种场景<br>    使用Volatile必须要具备两个条件：</p>
 <pre><code>A。对变量的写操作不依赖当前值
 B。该变量没有包含在具有其他变量不变的式子中
 </code></pre><p> 适合的使用场景：</p>
 <pre><code>A。特别适合状态标记量
 B。Double Check
-</code></pre><p> <strong>2. 有序性</strong></p>
-<p> 关键字与有序性：<br> Volatile 可以保证一定的有序性<br> Synchronize Lock 可以保证有序性</p>
+</code></pre><h4 id="2-有序性"><a href="#2-有序性" class="headerlink" title="2. 有序性"></a>2. 有序性</h4><p> 关键字与有序性：<br> Volatile 可以保证一定的有序性<br> Synchronize Lock 可以保证有序性</p>
 <p> happens-before 原则</p>
 <pre><code> 1）程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作
 2）锁定规则：一个unlock操作先行发生于后面对同一个锁的lock操作
@@ -523,8 +1117,7 @@ B。Double Check
 6）线程中断规则：对线程interrupt（）方法的调用先行发生于被中断线程的代码检测到中断事件的发生
 7）线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join（）方法结束、Thread.isAlive（）的返回值手段检测到线程已经终止执行
 8）对象终结规则：一个对象的初始化完成先行发生于他的finalize（）方法的开始
-</code></pre><p><strong>3. 安全发布对象</strong></p>
-<p>参考单例模式</p>
+</code></pre><h4 id="3-安全发布对象"><a href="#3-安全发布对象" class="headerlink" title="3. 安全发布对象"></a>3. 安全发布对象</h4><p>参考单例模式</p>
 <pre><code>1）在静态初始化函数中初始化一个对象引用
 2）将对象的引用保存到volatile类型域或者AtomicReference对象
 3）将对象的引用保存到某个正确构造对象的final类型中
@@ -532,14 +1125,12 @@ B。Double Check
 </code></pre><p>单例对象 volatile + 双重检测机制 -&gt;禁止指令重排</p>
 <p><img src="/2018/10/19/Java-并发编程知识汇总/images/pasted-61.png" alt="upload successful"><br>单例模式-枚举模式 使用枚举来实例化最安全，JVM保证枚举初始化只调用一次。相比于懒汉模式，安全性更容易保证，相比于饿汉模式是在实际调用的时候才初始化实例。推荐使用。</p>
 <p><img src="/2018/10/19/Java-并发编程知识汇总/images/pasted-60.png" alt="upload successful"></p>
-<p><strong>4 避免并发的方法</strong></p>
-<pre><code>1）使用不可变对象
+<h4 id="4-避免并发的方法"><a href="#4-避免并发的方法" class="headerlink" title="4 避免并发的方法"></a>4 避免并发的方法</h4><pre><code>1）使用不可变对象
 2）线程封闭
    A。Ad-hoc 线程封闭：程序控制实现，最糟糕，忽略
    B。堆栈封闭：局部变量，无并发问题。能用局部变量的就不用全局变量，全局变量容易引起并发问题。
    C。ThreadLocal 线程封闭：利用 map 实现了线程封闭
-</code></pre><p><strong>5. 线程安全与不安全的类</strong></p>
-<pre><code>线程不安全的类              线程安全的类
+</code></pre><h4 id="5-线程安全与不安全的类"><a href="#5-线程安全与不安全的类" class="headerlink" title="5. 线程安全与不安全的类"></a>5. 线程安全与不安全的类</h4><pre><code>线程不安全的类              线程安全的类
 StringBuilder                StringBuffer
 SimpleDateFormat             Datetime(Joda-Time包）
 ArrayList                    Vector  Stack
@@ -693,14 +1284,8 @@ HashMap                      HashTable
       
         
           
-            <ol>
-<li><p>安装 lombok</p>
-<p> 方法参加  <a href="https://projectlombok.org/setup/eclipse" target="_blank" rel="noopener">https://projectlombok.org/setup/eclipse</a></p>
-</li>
-<li><p>错误处理</p>
-</li>
-</ol>
-<p>lombok 安装后，在Java代码中是 @Slj4j 注解时编译通过，运行时抛错</p>
+            <h4 id="1-安装-lombok"><a href="#1-安装-lombok" class="headerlink" title="1. 安装 lombok"></a>1. 安装 lombok</h4><pre><code>方法参加  https://projectlombok.org/setup/eclipse
+</code></pre><h4 id="2-错误处理"><a href="#2-错误处理" class="headerlink" title="2. 错误处理"></a>2. 错误处理</h4><p>lombok 安装后，在Java代码中是 @Slj4j 注解时编译通过，运行时抛错</p>
 <p><strong>错误Failed to load class org.slf4j.impl.StaticLoggerBinder </strong></p>
 <p>下面信息是官方给出的解决方案 <a href="https://www.slf4j.org/codes.html" target="_blank" rel="noopener">https://www.slf4j.org/codes.html</a></p>
 <p>Failed to load class org.slf4j.impl.StaticLoggerBinder</p>
@@ -712,8 +1297,7 @@ HashMap                      HashTable
 <pre><code>log4j:WARN No appenders could be found for logger.
 log4j:WARN Please initialize the log4j system properly.
 log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
-</code></pre><p><strong>解决方案</strong></p>
-<p>A. 修改 pom 文件里的引用，删除 slf4j-log4j12 引用，加入 log4j-slf4j-impl 和 log4j-core 引用。<br>    <dependencies></dependencies></p>
+</code></pre><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>A. 修改 pom 文件里的引用，删除 slf4j-log4j12 引用，加入 log4j-slf4j-impl 和 log4j-core 引用。<br>    <dependencies></dependencies></p>
 <pre><code>&lt;!-- https://mvnrepository.com/artifact/org.projectlombok/lombok --&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
@@ -1252,14 +1836,10 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
       
         
           
-            <p><strong>1. 格式化Name Node时报 URI错误：</strong></p>
-<p>hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠</p>
-<p><strong>2. hdfs 的web server 默认的端口号已变为 9870</strong></p>
-<p><strong>3. 用 IE 浏览器打开 NN 的界面时出错</strong></p>
-<p>错误信息是 NameNode is still loading, Redirecting to the Startup Progress page.</p>
+            <h4 id="1-格式化Name-Node时报-URI错误："><a href="#1-格式化Name-Node时报-URI错误：" class="headerlink" title="1. 格式化Name Node时报 URI错误："></a>1. 格式化Name Node时报 URI错误：</h4><p>hdfs-site.xml 文件中 dfs.namenode.name.dir 配置存在问题，应该是 file:///，注意，这里是三个斜杠</p>
+<h4 id="2-hdfs-的web-server-默认的端口号已变为-9870"><a href="#2-hdfs-的web-server-默认的端口号已变为-9870" class="headerlink" title="2. hdfs 的web server 默认的端口号已变为 9870"></a>2. hdfs 的web server 默认的端口号已变为 9870</h4><h4 id="3-用-IE-浏览器打开-NN-的界面时出错"><a href="#3-用-IE-浏览器打开-NN-的界面时出错" class="headerlink" title="3. 用 IE 浏览器打开 NN 的界面时出错"></a>3. 用 IE 浏览器打开 NN 的界面时出错</h4><p>错误信息是 NameNode is still loading, Redirecting to the Startup Progress page.</p>
 <p>解决办法：用chrome浏览器</p>
-<p><strong>4. 运行 mapreduce 时出错</strong></p>
-<p>错误信息：Could not find or load main class org.apache.hadoop.mapreduce.v2.app.MRAppMaster</p>
+<h4 id="4-运行-mapreduce-时出错"><a href="#4-运行-mapreduce-时出错" class="headerlink" title="4. 运行 mapreduce 时出错"></a>4. 运行 mapreduce 时出错</h4><p>错误信息：Could not find or load main class org.apache.hadoop.mapreduce.v2.app.MRAppMaster</p>
 <p>原因：yarn-site.xml 中，yarn.application.classpath 未配置</p>
 <p>解决办法：</p>
 <pre><code>&lt;property&gt;
@@ -1276,671 +1856,15 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
         /opt/hadoop-3.1.0/share/hadoop/yarn/lib/*
     &lt;/value&gt;
 &lt;/property&gt;
-</code></pre><p><strong>5. 运行 start-dfs.sh 脚本不能启动全部 DataNode</strong></p>
-<p>Hadoop v2.x 使用 slaves 文件，Hadoop v3.x 使用 workers 文件</p>
+</code></pre><h4 id="5-运行-start-dfs-sh-脚本不能启动全部-DataNode"><a href="#5-运行-start-dfs-sh-脚本不能启动全部-DataNode" class="headerlink" title="5. 运行 start-dfs.sh 脚本不能启动全部 DataNode"></a>5. 运行 start-dfs.sh 脚本不能启动全部 DataNode</h4><p>Hadoop v2.x 使用 slaves 文件，Hadoop v3.x 使用 workers 文件</p>
 <p>解决办法： List all worker hostnames or IP addresses in your etc/hadoop/workers file, one per line. Helper scripts (described below) will use the etc/hadoop/workers file to run commands on many hosts at once.</p>
-<p><strong>6. 运行 hdfs zkfc -formatZK 报错</strong></p>
-<p>错误信息：FATAL tools.DFSZKFailoverController: DFSZKFailOverController exiting due to earlier exception java.lang.NumberFormatException: For input string: “2181”</p>
+<h4 id="6-运行-hdfs-zkfc-formatZK-报错"><a href="#6-运行-hdfs-zkfc-formatZK-报错" class="headerlink" title="6. 运行 hdfs zkfc -formatZK 报错"></a>6. 运行 hdfs zkfc -formatZK 报错</h4><p>错误信息：FATAL tools.DFSZKFailoverController: DFSZKFailOverController exiting due to earlier exception java.lang.NumberFormatException: For input string: “2181”</p>
 <p>原因： core-site.xml 文件中配置 ha.zookeeper.quorum 时，value值最后有空格。</p>
-<p><strong>7. 启动 zkfc 时报错</strong></p>
-<p>错误信息：ERROR：cannot set priority of zkfc process. 检查log文件，发现详细信息，Automatic failover is not enabled for NameNode.</p>
+<h4 id="7-启动-zkfc-时报错"><a href="#7-启动-zkfc-时报错" class="headerlink" title="7. 启动 zkfc 时报错"></a>7. 启动 zkfc 时报错</h4><p>错误信息：ERROR：cannot set priority of zkfc process. 检查log文件，发现详细信息，Automatic failover is not enabled for NameNode.</p>
 <p>解决办法：把 NameNode1上修改的配置文件 core-site.xml 和 hdfs-site.xml 文件复制到 NameNode2 上。</p>
-<p><strong>8. 启动 hbase 时报错</strong></p>
-<p>错误信息：java.net.ConnectException: Call From bigdata01.isaac.com to bigdata01.isaac.com:8020 failed on connection exception: java.net.Connection</p>
+<h4 id="8-启动-hbase-时报错"><a href="#8-启动-hbase-时报错" class="headerlink" title="8. 启动 hbase 时报错"></a>8. 启动 hbase 时报错</h4><p>错误信息：java.net.ConnectException: Call From bigdata01.isaac.com to bigdata01.isaac.com:8020 failed on connection exception: java.net.Connection</p>
 <p>Exception: Connection refused</p>
 <p>解决办法：查看 hadoop的 core-site.xml 文件，看 fs.defaultFS 配置的端口号，然后修改 hbase-site.xml 配置。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/09/18/虚拟机复制引起问题的解决方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/虚拟机复制引起问题的解决方法/" itemprop="url">虚拟机复制引起问题的解决方法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-18T11:55:00+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>问题描述：</strong>在同一台机器上，复制了多台虚拟机，启动后有机器不能ping通网关，也不能ping通其他机器。</p>
-<p><strong>原因：</strong>复制虚拟机后，启动虚拟机，选择了 I move it。虚拟机网卡的MAC地址没有改变，导致冲突。</p>
-<p><strong>解决办法：</strong>打开虚拟机设置，选择网络适配器，在高级选项中找到MAC地址项，点击“生成”按钮，重新生成新的MAC地址。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/09/16/Ubuntu：为普通用户赋予sudo权限/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/16/Ubuntu：为普通用户赋予sudo权限/" itemprop="url">Ubuntu：为普通用户赋予sudo权限</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-16T21:01:00+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>sudo功能的配置文件一般在这里：/etc/sudoers，可以使用visudo编辑，好处是如果规则写的不符合要求能提示你，坏处是调出的是nano编辑器。而且/etc/sudoers的配置文件的注释里也说明了，不建议直接修改/etc/sudoers，而是通过在/etc/sudoers.d/文件夹中新增文件来完成配置。</p>
-<p>Please consider adding local content in /etc/sudoers.d/ instead of directly modifying this file.</p>
-<p>新增的文件就用vi编辑就可以了，比如说要为mantou增加sudo权限，就增加一个文件，文件名无所谓，内容是：</p>
-<p>mantou ALL=(ALL) ALL</p>
-<p>保存，退出vi</p>
-<p>然后需要把这个文件权限设置为400：chmod 400 mantou</p>
-<p>再用mantou用户登录后就可以使用sudo权限了。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/09/14/学习资源/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/14/学习资源/" itemprop="url">学习资源</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-14T10:22:00+08:00">
-                2018-09-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Learning-Resource/" itemprop="url" rel="index">
-                    <span itemprop="name">Learning Resource</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>1. Deep Learning</strong></p>
-<p>机器学习爱好者   <a href="http://www.ai-start.com/" target="_blank" rel="noopener">http://www.ai-start.com/</a></p>
-<p>CS231n官方笔记授权翻译总集篇发布  <a href="https://zhuanlan.zhihu.com/p/21930884" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/21930884</a></p>
-<p>Yolo <a href="https://pjreddie.com/darknet/yolo/" target="_blank" rel="noopener">https://pjreddie.com/darknet/yolo/</a></p>
-<p><strong>2.算法</strong></p>
-<p>领扣    <a href="https://www.lintcode.com/" target="_blank" rel="noopener">https://www.lintcode.com/</a> </p>
-<p>LeetCode <a href="https://leetcode.com/" target="_blank" rel="noopener">https://leetcode.com/</a></p>
-<p><strong>3. Machine Learning</strong></p>
-<p>机器学习(周志华西瓜书) 参考答案 总目录 <a href="https://blog.csdn.net/icefire_tyh/article/details/52064910" target="_blank" rel="noopener">https://blog.csdn.net/icefire_tyh/article/details/52064910</a></p>
-<p>数据挖掘十大算法详解 <a href="https://wizardforcel.gitbooks.io/dm-algo-top10/content/index.html" target="_blank" rel="noopener">https://wizardforcel.gitbooks.io/dm-algo-top10/content/index.html</a></p>
-<p><strong>4. 自动化测试</strong></p>
-<p>Robot  <a href="http://robotframework.org/" target="_blank" rel="noopener">http://robotframework.org/</a></p>
-<p>LearnQTP <a href="https://www.learnqtp.com/" target="_blank" rel="noopener">https://www.learnqtp.com/</a></p>
-<p><strong>5. 开发工具</strong></p>
-<p>UML <a href="https://online.visual-paradigm.com/cn/solutions/free-uml-tool/" target="_blank" rel="noopener">https://online.visual-paradigm.com/cn/solutions/free-uml-tool/</a></p>
-<p><strong>6. Tensorflow教程资源：</strong></p>
-<p>（1）适合初学者的Tensorflow教程和代码示例：<a href="https://github.com/aymericdamien/TensorFlow-Examples。该教程不光提供了一些经典的数据集，更是从实现最简单的“Hello" target="_blank" rel="noopener">https://github.com/aymericdamien/TensorFlow-Examples。该教程不光提供了一些经典的数据集，更是从实现最简单的“Hello</a> World”开始，到机器学习的经典算法，再到神经网络的常用模型，一步步带你从入门到精通，是初学者学习Tensorflow的最佳教程。</p>
-<p>（2）从Tensorflow基础知识到有趣的项目应用：<a href="https://github.com/pkmital/tensorflow_tutorials。同样是适合新手的教程，从安装到项目实战，教你搭建一个属于自己的神经网络。" target="_blank" rel="noopener">https://github.com/pkmital/tensorflow_tutorials。同样是适合新手的教程，从安装到项目实战，教你搭建一个属于自己的神经网络。</a></p>
-<p>（3）使用Jupyter Notebook用Python语言编写的TensorFlow教程：<a href="https://github.com/sjchoi86/Tensorflow-101。" target="_blank" rel="noopener">https://github.com/sjchoi86/Tensorflow-101。</a> 本教程是基于Jupyter Notebook开发环境的Tensorflow教程，Jupyter Notebook是一款非常好用的交互式开发工具，不仅支持40多种编程语言，还可以实时运行代码、共享文档、数据可视化、支持markdown等，适用于机器学习、统计建模数据处理、特征提取等多个领域。</p>
-<p>（4）构建您的第一款TensorFlow Android应用程序：<a href="https://omid.al/posts/2017-02-20-Tutorial-Build-Your-First-Tensorflow-Android-App.html。本教程可帮助您从零开始将张量流模型引入到Android应用程序。" target="_blank" rel="noopener">https://omid.al/posts/2017-02-20-Tutorial-Build-Your-First-Tensorflow-Android-App.html。本教程可帮助您从零开始将张量流模型引入到Android应用程序。</a></p>
-<p><strong>7. 设计模式</strong></p>
-<p>设计模式Java版 <a href="https://gof.quanke.name/" target="_blank" rel="noopener">https://gof.quanke.name/</a></p>
-<p><strong>8. Hadoop</strong></p>
-<p>MRUnit <a href="https://cwiki.apache.org/confluence/display/MRUNIT/MRUnit+Tutorial#space-menu-link-content" target="_blank" rel="noopener">https://cwiki.apache.org/confluence/display/MRUNIT/MRUnit+Tutorial#space-menu-link-content</a></p>
-<p>hadoop-book <a href="https://github.com/tomwhite/hadoop-book/" target="_blank" rel="noopener">https://github.com/tomwhite/hadoop-book/</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://Isaac-Li.github.io/2018/09/10/Deep-Learning-学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Isaac Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Isaac Li">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/10/Deep-Learning-学习笔记/" itemprop="url">Deep Learning-学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-10T16:15:00+08:00">
-                2018-09-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="本文档是吴恩达老师深度学习课程的学习笔记"><a href="#本文档是吴恩达老师深度学习课程的学习笔记" class="headerlink" title="本文档是吴恩达老师深度学习课程的学习笔记"></a>本文档是吴恩达老师深度学习课程的学习笔记</h2><p><strong>1. 激活函数 </strong></p>
-<p>  在讨论优化算法时，有一点要说明：我基本已经不用 sigmoid 激活函数了， tanh 函数在<br>  所有场合都优于 sigmoid 函数。<br>  但有一个例外：在二分类的问题中，对于输出层，因为𝑦的值是 0 或 1，所以想让𝑦 ^的数值介于 0 和 1 之间，而不是在-1 和+1 之间。所以需要使用 sigmoid 激活函数。</p>
-<p>  结果表明，如果在隐藏层上使用函数效果总是优于 sigmoid 函数。因为函数值域在-1 和+1的激活函数，其均值是更接近零均值的。在训练一个算法模型时，如果使用 tanh 函数代替sigmoid 函数中心化数据，使得数据的平均值更接近 0 而不是 0.5.<br>这会使下一层学习简单一点。</p>
-<p>  sigmoid 函数和 tanh 函数两者共同的缺点是，在𝑧特别大或者特别小的情况下，导数的<br>梯度或者函数的斜率会变得特别小，最后就会接近于 0，导致降低梯度下降的速度。</p>
-<p>  <strong>这有一些选择激活函数的经验法则：</strong></p>
-<p>  如果输出是 0、 1 值（二分类问题），则输出层选择 sigmoid 函数，然后其它的所有单元都选择 Relu 函数。<br>  这是很多激活函数的默认选择，如果在隐藏层上不确定使用哪个激活函数，那么通常会使用 Relu 激活函数。有时，也会使用 tanh 激活函数，但 Relu 的一个优点是：当𝑧是负值的时候，导数等于 0。</p>
-<p>  总而言之，不能在隐藏层用线性激活函数，可以用 ReLU 或者 tanh 或者 leaky ReLU 或者其他的非线性激活函数，唯一可以用线性激活函数的通常就是输出层；</p>
-<p><strong>2.随机初始化</strong></p>
-<p>对于一个神经网络，如果你把权重或者参数都初始化为 0，那么梯度<br>下降将不会起作用。</p>
-<p>这个问题的解决方法就是随机初始化参数。 你应该这么做 ： 把 𝑊[1] 设 为 np.random.randn(2,2)(生成高斯分布)，通常再乘上一个小的数，比如 0.01，这样把它初始化为很小的随机数。然后𝑏没有这个对称的问题（叫做 symmetry breaking problem），所以可以把 𝑏 初始化为 0。</p>
-<p>为什么是 0.01，而不是 100 或者 1000。我们通常<br>倾向于初始化为很小的随机数。因为如果你用 tanh 或者 sigmoid 激活函数，或者说只在输出层有一个 Sigmoid，如果（数值）波动太大，这种情况<br>下你很可能停在 tanh/sigmoid 函数的平坦的地方，这些地方梯度很小也就意味着梯度下降会很慢，因此学习也就很慢。</p>
-<p><strong>3.反向传播</strong></p>
-<p><img src="/2018/09/10/Deep-Learning-学习笔记/images/pasted-53.png" alt="upload successful"></p>
-<p><strong>4.训练集、验证集、测试集</strong></p>
-<p>在机器学习中，我们通常将样本分成训练集，验证集和测试集三部分，数据集规模相对较小，适用传统的划分比例，数据集规模较大的，验证集和测试集要小于数据总量的 20%或 10%。</p>
-<p>最后一点，就算没有测试集也不要紧，测试集的目的是对最终所选定的神经网络系统做<br>出无偏估计，如果不需要无偏估计，也可以不设置测试集。所以如果只有验证集，没有测试<br>集，我们要做的就是，在训练集上训练，尝试不同的模型框架，在验证集上评估这些模型，<br>然后迭代并选出适用的模型。因为验证集中已经涵盖测试集数据，其不再提供无偏性能评估。</p>
-<p><strong>5.偏差 方差（ Bias /Variance）</strong></p>
-<p>理解偏差和方差的两个关键数据是训练集误差（ Train set error）和验证集误差（ Dev set error）</p>
-<p>假定训练集误差是 1%，为了方便论证，假定验证集误差是 11%，可以看出训练集设置得非常好，而验证集设置相对较差， 我们可能过度拟合了训练集，在某种程度上，验证集并没有充分利用交叉验证集的作用， 像这种情况， 我们称之为“高方差”。</p>
-<p>通过查看训练集误差和验证集误差，我们便可以诊断算法是否具有高方差。也就是说衡量训练集和验证集误差就可以得出不同结论。</p>
-<p>假设训练集误差是 15%，我们把训练集误差写在首行，验证集误差是 16%，假设该案例中人的错误率几乎为 0%，人们浏览这些图片，分辨出是不是猫。算法并没有在训练集中得到很好训练，如果训练数据的拟合度不高，就是数据欠拟合，就可以说这种算法偏差比较高。</p>
-<p>相反，它对于验证集产生的结果却是合理的，验证集中的错误率只比训练集的多了 1%，所以这种算法偏差高，因为它甚至不能拟合训练集，这与上一张幻灯片最左边的图片相似。再举一个例子，训练集误差是 15%，偏差相当高，但是，验证集的评估结果更糟糕，错误率达到 30%，在这种情况下，我会认为这种算法偏差高，因为它在训练集上结果不理想，而且方差也很高，这是方差偏差都很糟糕的情况。再看最后一个例子，训练集误差是 0.5%，验证集误差是 1%，用户看到这样的结果会很开心，猫咪分类器只有 1%的错误率，偏差和方差都很低。</p>
-<p>  这些分析都是基于假设预测的，假设人眼辨别的错误率接近 0%，一般来说，最优误差也被称为贝叶斯误差，所以，最优误差接近 0%，如果最优误差或贝叶斯误差非常高，比如 15%。我们再看看这个分类器（训练误差 15%，验证误差 16%）， 15%的错误率对训练集来说也是非常合理的，偏差不高，方差也非常低。</p>
-<p>  初始模型训练完成后，我首先要知道算法的偏差高不高，如果偏差较高，试着评估训练集或训练数据的性能。如果偏差的确很高，甚至无法拟合训练集，那么你要做的就是选择一个新的网络，比如含有更多隐藏层或者隐藏单元的网络，或者花费更多时间来训练网络，或者尝试更先进的优化算法.</p>
-<p>  如果网络足够大，通常可以很好的拟合训练集，只要你能扩大网络规模，如果图片很模糊，算法可能无法拟合该图片，但如果有人可以分辨出图片，如果你觉得基本误差不是很高，那么训练一个更大的网络， 你就应该可以……至少可以很好地拟合训练集， 至少可以拟合或者过拟合训练集。一旦偏差降低到可以接受的数值，检查一下方差有没有问题，为了评估方差，我们要查看验证集性能，我们能从一个性能理想的训练集推断出验证集的性能是否也理想，如果方差高，最好的解决办法就是采用更多数据，如果你能做到，会有一定的帮助，但有时候，我们无法获得更多数据，我们也可以尝试通过正则化来减少过拟合.</p>
-<p>  有两点需要大家注意：</p>
-<p>第一点，高偏差和高方差是两种不同的情况，我们后续要尝试的方法也可能完全不同，我通常会用训练验证集来诊断算法是否存在偏差或方差问题，然后根据结果选择尝试部分方<br>法。举个例子，如果算法存在高偏差问题，准备更多训练数据其实也没什么用处，至少这不是更有效的方法，所以大家要清楚存在的问题是偏差还是方差，还是两者都有问题，明确这一点有助于我们选择出最有效的方法。</p>
-<p>第二点，在机器学习的初期阶段，关于所谓的偏差方差权衡的讨论屡见不鲜，原因是我们能尝试的方法有很多。可以增加偏差，减少方差，也可以减少偏差，增加方差，但是在深度学习的早期阶段，我们没有太多工具可以做到只减少偏差或方差却不影响到另一方。但在当前的深度学习和大数据时代，只要持续训练一个更大的网络，只要准备了更多数据，那么也并非只有这两种情况，我们假定是这样，那么，只要正则适度，通常构建一个更大的网络便可以，在不影响方差的同时减少偏差，而采用更多数据通常可以在不过多影响偏差的同时减少方差。这两步实际要做的工作是：训练网络，选择网络或者准备更多数据，现在我们有工具可以做到在减少偏差或方差的同时，不对另一方产生过多不良影响。我觉得这就是深度<br>学习对监督式学习大有裨益的一个重要原因，也是我们不用太过关注如何平衡偏差和方差的一个重要原因，但有时我们有很多选择，减少偏差或方差而不增加另一方。最终，我们会得到一个非常规范化的网络。</p>
-<p><strong>6. 正则化（ Regularization） </strong></p>
-<p>深度学习可能存在过拟合问题——高方差， 有两个解决方法， 一个是正则化， 另一个是准备更多的数据，这是非常可靠的方法，但你可能无法时时刻刻准备足够多的训练数据或者获取更多数据的成本很高，但正则化通常有助于避免过拟合或减少你的网络误差。</p>
-<p>如果用的是𝐿1正则化， 𝑤最终会是稀疏的，也就是说𝑤向量中有很多 0，有人说这样有利于压缩模型，因为集合中参数均为 0，存储模型所占用的内存更少。实际上，虽然𝐿1正则化使模型变得稀疏，却没有降低太多存储内存，所以我认为这并不是𝐿1正则化的目的，至少不是为了压缩模型，人们在训练网络时，越来越倾向于使用𝐿2正则化。</p>
-<p>dropout 正则化：Dropout 可以随机删除网络中的神经单元，他为什么可以通过正则化发挥如此大的作用呢？</p>
-<p>直观上理解：不要依赖于任何一个特征，因为该单元的输入可能随时被清除，因此该单元通过这种方式传播下去，并为单元的四个输入增加一点权重，通过传播所有权重， dropout将产生收缩权重的平方范数的效果，和之前讲的𝐿2正则化类似；实施 dropout 的结果实它会压缩权重，并完成一些预防过拟合的外层正则化； 𝐿2对不同权重的衰减是不同的，它取决于激活函数倍增的大小。</p>
-<p>  总结一下， dropout 的功能类似于𝐿2正则化，与𝐿2正则化不同的是应用方式不同会带来一点点小变化，甚至更适用于不同的输入范围。</p>
-<p>  dropout 一大缺点就是代价函数𝐽不再被明确定义，每次迭代，都会随机移除一些节点，<br>如果再三检查梯度下降的性能，实际上是很难进行复查的。定义明确的代价函数𝐽每次迭代<br>后都会下降，因为我们所优化的代价函数 J 实际上并没有明确定义，或者说在某种程度上很<br>难计算，所以我们失去了调试工具来绘制这样的图片。我通常会关闭 dropout 函数，将 keepprob 的值设为 1，运行代码，确保𝐽函数单调递减。然后打开 dropout 函数，希望在 dropout<br>过程中，代码并未引入 bug。</p>
-<p>其他正则化方法： 1. 数据扩增  2.early stopping</p>
-<p>我认为机器学习过程包括几个步骤，其中一步是选择一个算法来优化代价函数𝐽，我们有很多种工具来解决这个问题，如梯度下降，后面我会介绍其它算法，例如 Momentum，RMSprop 和 Adam 等等，但是优化代价函数𝐽之后，我也不想发生过拟合，也有一些工具可以解决该问题，比如正则化，扩增数据等等。</p>
-<p>在机器学习中，超级参数激增，选出可行的算法也变得越来越复杂。我发现，如果我们用一组工具优化代价函数𝐽，机器学习就会变得更简单，在重点优化代价函数𝐽时，你只需要留意𝑤和𝑏， 𝐽(𝑤, 𝑏)的值越小越好，你只需要想办法减小这个值，其它的不用关注。然后，预防过拟合还有其他任务，换句话说就是减少方差，这一步我们用另外一套工具来实现，这个原理有时被称为“正交化”。思路就是在一个时间做一个任务， 后面课上我会具体介绍正交化，如果你还不了解这个概念，不用担心。<br>但对我来说 early stopping 的主要缺点就是你不能独立地处理这两个问题，因为提早停止梯度下降，也就是停止了优化代价函数𝐽，因为现在你不再尝试降低代价函数𝐽，所以代价函数𝐽的值可能不够小，同时你又希望不出现过拟合，你没有采取不同的方式来解决这两个问题，而是用一种方法同时解决两个问题，这样做的结果是我要考虑的东西变得更复杂。</p>
-<p>如果不用 early stopping，另一种方法就是𝐿2正则化，训练神经网络的时间就可能很长。我发现，这导致超级参数搜索空间更容易分解，也更容易搜索，但是缺点在于，你必须尝试很多正则化参数𝜆的值，这也导致搜索大量𝜆值的计算代价太高。<br>Early stopping 的优点是，只运行一次梯度下降，你可以找出𝑤的较小值，中间值和较大值，而无需尝试𝐿2正则化超级参数𝜆的很多值。</p>
-<p><strong>7. 归一化输入</strong> </p>
-<p>训练神经网络，其中一个加速训练的方法就是归一化输入。假设一个训练集有两个特征，输入特征为 2 维，归一化需要两个步骤：</p>
-<pre><code>1.零均值
-2.归一化方差；
-</code></pre><p>我们希望无论是训练集和测试集都是通过相同的𝜇和𝜎2定义的数据转换</p>
-<p><strong>8. 神经网络的权重初始化</strong></p>
-<p>在深度神经网络中，激活函数将以指数级递减，虽然我只是讨论了激活函数以与𝐿相关的指数级数增长或下降，它也适用于与层数𝐿相关的导数或梯度函数，也是呈指数级增长或呈指数递减。</p>
-<p>𝑧 = 𝑤1𝑥1 + 𝑤2𝑥2 + ⋯ + 𝑤𝑛𝑥𝑛， 𝑏 = 0，暂时忽略𝑏，为了预防𝑧值过大或过小，你可以看到𝑛越大，你希望𝑤𝑖越小，因为𝑧是𝑤[𝑖]𝑥[𝑖]的和，如果你把很多此类项相加，希望每项值更小，最合理的方法就是设置𝑤[𝑖] = 1/𝑛， 𝑛表示神经元的输入特征数量，实际上，你要做的就是设置<br>某层权重矩阵𝑤[𝑙] = 𝑛𝑝. 𝑟𝑎𝑛𝑑𝑜𝑚. 𝑟𝑎𝑛𝑑𝑛(shape) ∗ np. sqrt( 1<br>𝑛[𝑙−1] )， 𝑛[𝑙−1]就是我喂给第𝑙层神经单元的数量（即第𝑙 − 1层神经元数量）。</p>
-<p>结果，如果你是用的是 Relu 激活函数，而不是1/𝑛，方差设置为2/𝑛，效果会更好。你常常发现，初始化时，尤其是使用 Relu 激活函数时， 𝑔<a href="𝑧">𝑙</a> = 𝑅𝑒𝑙𝑢(𝑧),它取决于你对随机变量的熟悉程度，这是高斯随机变量，然后乘以它的平方根，也就是引用这个方差2/n。这里，我用的是𝑛[𝑙−1]，因为本例中，逻辑回归的特征是不变的。但一般情况下𝑙层上的每个神经元都有𝑛[𝑙−1]个输入。如果激活函数的输入特征被零均值和标准方差化，方差是 1， 𝑧也会调整到相似范围，这就没解决问题（梯度消失和爆炸问题）。但它确实降低了梯度消失和爆炸问题，因为它给权重矩阵𝑤设置了合理值，你也知道，它不能比 1 大很多，也不能比 1 小很多，所<br>以梯度没有爆炸或消失过快。</p>
-<p><img src="/2018/09/10/Deep-Learning-学习笔记/images/pasted-54.png" alt="upload successful"></p>
-<p><strong>9 局部最优问题</strong></p>
-<p>在深度学习研究早期，人们总是担心优化算法会困在极差的局部最优， 不过随着深度学习理论不断发展，我们对局部最优的理解也发生了改变。我们从深度学习历史中学到的一课就是，我们对低维度空间的大部分直觉，比如你可以画出上面的图，并不能应用到高维度空间中。适用于其它算法，因为如果你有 2 万个参数，那么𝐽函数有 2 万个维度向量，你更可能遇到鞍点，而不是局部最优点。</p>
-<p>如果局部最优不是问题，那么问题是什么？结果是平稳段会减缓学习，平稳段是一块区域，其中导数长时间接近于 0，如果你在此处，梯度会从曲面从从上向下下降，因为梯度等于或接近 0，曲面很平坦，你得花上很长时间慢慢抵达平稳段的这个点。</p>
-<p>所以此次视频的要点是，首先，你不太可能困在极差的局部最优中，条件是你在训练较大的神经网络，存在大量参数， 并且成本函数𝐽被定义在较高的维度空间。<br>第二点，平稳段是一个问题，这样使得学习十分缓慢，这也是像 Momentum 或是<br>RMSprop， Adam 这样的算法，能够加速学习算法的地方。在这些情况下，更成熟的优化算法，如 Adam 算法，能够加快速度，让你尽早往下走出平稳段。</p>
 
           
         
@@ -1980,7 +1904,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2030,7 +1954,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2041,7 +1965,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2052,7 +1976,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

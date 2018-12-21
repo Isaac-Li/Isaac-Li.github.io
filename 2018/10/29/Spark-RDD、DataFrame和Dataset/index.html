@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="在什么情况下使用RDD？ 下面是使用RDD的场景和常见案例： 1) 你希望可以对你的数据集进行最基本的转换、处理和控制； 2) 你的数据是非结构化的，比如流媒体或者字符流； 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据； 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性； 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据">
+<meta name="description" content="在什么情况下使用RDD？下面是使用RDD的场景和常见案例： 1) 你希望可以对你的数据集进行最基本的转换、处理和控制； 2) 你的数据是非结构化的，比如流媒体或者字符流； 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据； 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性； 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据处">
 <meta name="keywords" content="Spark">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark-RDD、DataFrame和Dataset">
 <meta property="og:url" content="http://Isaac-Li.github.io/2018/10/29/Spark-RDD、DataFrame和Dataset/index.html">
 <meta property="og:site_name" content="Isaac Li">
-<meta property="og:description" content="在什么情况下使用RDD？ 下面是使用RDD的场景和常见案例： 1) 你希望可以对你的数据集进行最基本的转换、处理和控制； 2) 你的数据是非结构化的，比如流媒体或者字符流； 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据； 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性； 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据">
+<meta property="og:description" content="在什么情况下使用RDD？下面是使用RDD的场景和常见案例： 1) 你希望可以对你的数据集进行最基本的转换、处理和控制； 2) 你的数据是非结构化的，比如流媒体或者字符流； 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据； 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性； 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据处">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://isaac-li.github.io/2018/10/29/Spark-RDD、DataFrame和Dataset/images/pasted-63.png">
-<meta property="og:updated_time" content="2018-11-05T07:07:54.844Z">
+<meta property="og:updated_time" content="2018-12-21T06:56:19.867Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark-RDD、DataFrame和Dataset">
-<meta name="twitter:description" content="在什么情况下使用RDD？ 下面是使用RDD的场景和常见案例： 1) 你希望可以对你的数据集进行最基本的转换、处理和控制； 2) 你的数据是非结构化的，比如流媒体或者字符流； 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据； 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性； 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据">
+<meta name="twitter:description" content="在什么情况下使用RDD？下面是使用RDD的场景和常见案例： 1) 你希望可以对你的数据集进行最基本的转换、处理和控制； 2) 你的数据是非结构化的，比如流媒体或者字符流； 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据； 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性； 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据处">
 <meta name="twitter:image" content="http://isaac-li.github.io/2018/10/29/Spark-RDD、DataFrame和Dataset/images/pasted-63.png">
 
 
@@ -354,17 +354,14 @@
       
 
       
-        <p><strong>在什么情况下使用RDD？</strong></p>
-<p>下面是使用RDD的场景和常见案例：</p>
+        <h4 id="在什么情况下使用RDD？"><a href="#在什么情况下使用RDD？" class="headerlink" title="在什么情况下使用RDD？"></a>在什么情况下使用RDD？</h4><p>下面是使用RDD的场景和常见案例：</p>
 <pre><code>1) 你希望可以对你的数据集进行最基本的转换、处理和控制；
 2) 你的数据是非结构化的，比如流媒体或者字符流；
 3) 你想通过函数式编程而不是特定领域内的表达来处理你的数据；
 4) 你不希望像进行列式处理一样定义一个模式，通过名字或字段来处理或访问数据属性；
 5) 你并不在意通过DataFrame和Dataset进行结构化和半结构化数据处理所能获得的一些优化和性能上的好处；
-</code></pre><p><strong>DataFrame</strong></p>
-<p>与RDD相似，DataFrame也是数据的一个不可变分布式集合。但与RDD不同的是，数据都被组织到有名字的列中，就像关系型数据库中的表一样。设计DataFrame的目的就是要让对大型数据集的处理变得更简单，它让开发者可以为分布式的数据集指定一个模式，进行更高层次的抽象。</p>
-<p><strong>该什么时候使用DataFrame或Dataset呢？</strong></p>
-<pre><code>1) 如果你需要丰富的语义、高级抽象和特定领域专用的API，那就使用DataFrame或Dataset；
+</code></pre><h4 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h4><p>与RDD相似，DataFrame也是数据的一个不可变分布式集合。但与RDD不同的是，数据都被组织到有名字的列中，就像关系型数据库中的表一样。设计DataFrame的目的就是要让对大型数据集的处理变得更简单，它让开发者可以为分布式的数据集指定一个模式，进行更高层次的抽象。</p>
+<h4 id="该什么时候使用DataFrame或Dataset呢？"><a href="#该什么时候使用DataFrame或Dataset呢？" class="headerlink" title="该什么时候使用DataFrame或Dataset呢？"></a>该什么时候使用DataFrame或Dataset呢？</h4><pre><code>1) 如果你需要丰富的语义、高级抽象和特定领域专用的API，那就使用DataFrame或Dataset；
 2) 如果你的处理需要对半结构化数据进行高级处理，如filter、map、aggregation、average、sum、SQL查询、列式访问或使用lambda函数，那就使用DataFrame或Dataset；
 3) 如果你想在编译时就有高度的类型安全，想要有类型的JVM对象，用上Catalyst优化，并得益于Tungsten生成的高效代码，那就使用Dataset；
 4) 如果你想在不同的Spark库之间使用一致和简化的API，那就使用DataFrame或Dataset；
@@ -465,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -485,7 +491,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -496,7 +502,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -507,7 +513,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -546,6 +552,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#在什么情况下使用RDD？"><span class="nav-number">1.</span> <span class="nav-text">在什么情况下使用RDD？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DataFrame"><span class="nav-number">2.</span> <span class="nav-text">DataFrame</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#该什么时候使用DataFrame或Dataset呢？"><span class="nav-number">3.</span> <span class="nav-text">该什么时候使用DataFrame或Dataset呢？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
